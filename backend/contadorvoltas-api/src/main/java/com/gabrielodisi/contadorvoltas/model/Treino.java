@@ -1,15 +1,14 @@
 package com.gabrielodisi.contadorvoltas.model;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Data
 @Entity
 public class Treino {
@@ -25,7 +24,7 @@ public class Treino {
     private int totalVoltas;
     private String nome;
     private LocalDate dataTreino;
-    private Duration tempo;
+    private Long tempo;
     private boolean concluido;
 
     @ElementCollection
@@ -35,8 +34,7 @@ public class Treino {
     )
     private List<Volta> voltas = new ArrayList<>();
 
-
-    public void adicionarVolta(LocalTime tempoVolta) {
+    public void adicionarVolta(Long tempoVolta) {
         if (this.concluido) {
             throw new IllegalStateException("Treino já foi concluído");
         }
@@ -57,7 +55,7 @@ public class Treino {
 
     private void recalcularTempoTotal() {
         this.tempo = voltas.stream()
-                .map(v -> Duration.between(LocalTime.MIDNIGHT, v.getTempoVolta()))
-                .reduce(Duration.ZERO, Duration::plus);
+                .mapToLong(Volta::getTempoVolta)
+                .sum();
     }
 }
