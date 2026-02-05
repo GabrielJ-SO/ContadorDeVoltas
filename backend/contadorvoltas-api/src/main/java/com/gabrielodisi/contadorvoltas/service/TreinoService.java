@@ -3,6 +3,8 @@ package com.gabrielodisi.contadorvoltas.service;
 import com.gabrielodisi.contadorvoltas.model.Treino;
 import com.gabrielodisi.contadorvoltas.model.Volta;
 import com.gabrielodisi.contadorvoltas.repository.TreinoRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,14 @@ public class TreinoService {
         else {
             throw new RuntimeException("Treino não encontrado");
         }
+    }
+
+    @Transactional
+    public void registrarVolta(Long treinoId, Long tempoVolta) {
+        Treino treino = repository.findById(treinoId)
+                .orElseThrow(() -> new EntityNotFoundException("Treino não encontrado"));
+
+        treino.adicionarVolta(tempoVolta);
     }
 
     public List<Volta> listarVoltas(Long treinoId) {

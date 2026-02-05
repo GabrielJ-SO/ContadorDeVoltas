@@ -1,5 +1,6 @@
 package com.gabrielodisi.contadorvoltas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.GenerationType;
 import lombok.Data;
@@ -16,7 +17,10 @@ public class Atleta {
 
     private Long id;
     private String nome;
+    private String senha;
 
     @OneToMany(mappedBy = "atleta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Treino> treinos = new ArrayList<>();
+    @JsonIgnore
+    private List<Treino> treinos;
+
 }
