@@ -11,7 +11,7 @@ public class Volta {
     private Long tempoVolta;
 
     protected Volta() {
-        // JPA
+
     }
 
     public Volta(int numeroVolta, Long tempoVolta) {

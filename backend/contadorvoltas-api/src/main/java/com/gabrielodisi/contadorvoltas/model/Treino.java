@@ -1,5 +1,6 @@
 package com.gabrielodisi.contadorvoltas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -23,7 +24,8 @@ public class Treino {
 
     private int totalVoltas;
     private String nome;
-    private LocalDate dataTreino;
+    private int voltasConcluidas = 0;
+    private LocalDate dataTreino = LocalDate.now();
     private Long tempo;
     private boolean concluido;
 
@@ -32,6 +34,7 @@ public class Treino {
             name = "treino_voltas",
             joinColumns = @JoinColumn(name = "treino_id")
     )
+    @JsonIgnore
     private List<Volta> voltas = new ArrayList<>();
 
     public void adicionarVolta(Long tempoVolta) {
@@ -39,6 +42,7 @@ public class Treino {
             throw new IllegalStateException("Treino já foi concluído");
         }
 
+        this.voltasConcluidas++;
         int numero = voltas.size() + 1;
         voltas.add(new Volta(numero, tempoVolta));
 

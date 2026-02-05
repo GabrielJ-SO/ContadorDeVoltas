@@ -1,5 +1,6 @@
 package com.gabrielodisi.contadorvoltas.service;
 
+import com.gabrielodisi.contadorvoltas.dto.response.TreinoResponseDTO;
 import com.gabrielodisi.contadorvoltas.model.Atleta;
 import com.gabrielodisi.contadorvoltas.model.Treino;
 import com.gabrielodisi.contadorvoltas.repository.AtletaRepository;
@@ -20,6 +21,14 @@ public class AtletaService {
     public Optional<Atleta> buscarPorId(Long id) { return repository.findById(id); }
 
     public Atleta salvar(Atleta atleta) { return repository.save(atleta); }
+
+    public Atleta atualizar(Long id, Atleta atletaAtualizado) {
+        if (!repository.existsById(id)) {
+            return null;
+        }
+        atletaAtualizado.setId(id);
+        return salvar(atletaAtualizado);
+    }
 
     public void deletar(Long id) {
         if (repository.existsById(id)) {
