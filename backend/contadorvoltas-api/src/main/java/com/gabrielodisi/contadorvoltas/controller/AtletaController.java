@@ -1,6 +1,5 @@
 package com.gabrielodisi.contadorvoltas.controller;
 
-import com.gabrielodisi.contadorvoltas.dto.response.TreinoResponseDTO;
 import com.gabrielodisi.contadorvoltas.model.Atleta;
 import com.gabrielodisi.contadorvoltas.model.Treino;
 import com.gabrielodisi.contadorvoltas.service.AtletaService;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,12 +40,11 @@ public class AtletaController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id}/treinos")
-    public ResponseEntity<List<TreinoResponseDTO>> listarTreinos(@PathVariable Long id) {
-
-
-
-        return
+    @GetMapping("{id}/treinos")
+    public ResponseEntity<List<Treino>> listarTreinos(@PathVariable Long id) {
+        Optional<List<Treino>> atleta = Optional.ofNullable(service.listarTreinosDoAtleta(id));
+        return  atleta.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }

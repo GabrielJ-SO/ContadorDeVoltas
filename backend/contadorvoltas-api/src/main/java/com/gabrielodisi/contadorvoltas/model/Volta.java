@@ -11,7 +11,6 @@ public class Volta {
     private Long tempoVolta;
 
     protected Volta() {
-
     }
 
     public Volta(int numeroVolta, Long tempoVolta) {
