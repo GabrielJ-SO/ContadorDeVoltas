@@ -26,7 +26,7 @@ public class Treino {
     private String nome;
     private int voltasConcluidas = 0;
     private LocalDate dataTreino = LocalDate.now();
-    private Long tempo;
+    private long tempo = 0;
     private boolean concluido;
 
     @ElementCollection

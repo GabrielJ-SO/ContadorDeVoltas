@@ -1,6 +1,5 @@
 package com.gabrielodisi.contadorvoltas.service;
 
-import com.gabrielodisi.contadorvoltas.dto.response.TreinoResponseDTO;
 import com.gabrielodisi.contadorvoltas.model.Atleta;
 import com.gabrielodisi.contadorvoltas.model.Treino;
 import com.gabrielodisi.contadorvoltas.repository.AtletaRepository;
@@ -43,9 +42,8 @@ public class AtletaService {
         Optional<Atleta> atleta = repository.findById(id);
         if (atleta.isPresent()) {
             return atleta.get().getTreinos();
-        }
-        else {
-            throw new RuntimeException("Atleta não  encontrado");
+        } else {
+            throw new RuntimeException("Atleta não encontrado.");
         }
 
     }

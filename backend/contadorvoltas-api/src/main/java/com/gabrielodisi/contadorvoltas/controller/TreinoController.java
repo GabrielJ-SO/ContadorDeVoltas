@@ -1,7 +1,7 @@
 package com.gabrielodisi.contadorvoltas.controller;
 
-import com.gabrielodisi.contadorvoltas.dto.request.RegistrarVoltaRequestDTO;
 import com.gabrielodisi.contadorvoltas.model.Treino;
+import com.gabrielodisi.contadorvoltas.model.Volta;
 import com.gabrielodisi.contadorvoltas.service.TreinoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,9 +41,9 @@ public class TreinoController {
     @PostMapping("/{id}/voltas")
     public ResponseEntity<Void> registrarVolta(
             @PathVariable Long id,
-            @RequestBody RegistrarVoltaRequestDTO request) {
+            @RequestBody Volta request) {
 
-        service.registrarVolta(id, (request.tempoVolta()) );
+        service.registrarVolta(id, (request.getTempoVolta()) );
 
         return ResponseEntity.ok().build();
     }
