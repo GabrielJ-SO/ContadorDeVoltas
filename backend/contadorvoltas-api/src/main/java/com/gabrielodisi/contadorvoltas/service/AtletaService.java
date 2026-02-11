@@ -3,6 +3,7 @@ package com.gabrielodisi.contadorvoltas.service;
 import com.gabrielodisi.contadorvoltas.model.Atleta;
 import com.gabrielodisi.contadorvoltas.model.Treino;
 import com.gabrielodisi.contadorvoltas.repository.AtletaRepository;
+import com.gabrielodisi.contadorvoltas.repository.TreinoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,8 @@ public class AtletaService {
 
     @Autowired
     private AtletaRepository repository;
+    @Autowired
+    private TreinoRepository treinoRepository;
 
     public List<Atleta> listar() { return repository.findAll(); }
 
@@ -46,5 +49,25 @@ public class AtletaService {
             throw new RuntimeException("Atleta não encontrado.");
         }
 
+    }
+
+    public List<Treino> buscarTreinosPorNome(Long atleta_id, String nome) {
+        Optional<Atleta> atleta = repository.findById(atleta_id);
+        if (atleta.isPresent()) {
+            return treinoRepository.buscarTreinosPorNome(nome, atleta_id);
+        }
+        else {
+            throw new RuntimeException("Atleta não encontrado.");
+        }
+    }
+
+    public  List<Treino> buscarTreinosPorData(Long atleta_id, String data) {
+        Optional<Atleta> atleta = repository.findById(atleta_id);
+        if (atleta.isPresent()) {
+            return treinoRepository.buscarTreinosPorData(data, atleta_id);
+        }
+        else {
+            throw new RuntimeException("Atleta não encontrado.");
+        }
     }
 }

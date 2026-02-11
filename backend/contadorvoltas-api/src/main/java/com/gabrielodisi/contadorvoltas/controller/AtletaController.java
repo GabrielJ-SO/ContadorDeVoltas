@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +18,10 @@ public class AtletaController {
     @Autowired
     private AtletaService service;
 
+
     @GetMapping
     public List<Atleta> listar() { return service.listar(); }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Atleta> buscarPorId(@PathVariable Long id) {
@@ -27,8 +30,10 @@ public class AtletaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     @PostMapping
     public Atleta salvar(@RequestBody Atleta atleta) { return service.salvar(atleta); }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Atleta> atualizar(@PathVariable Long id, @RequestBody Atleta atleta) {
@@ -40,11 +45,32 @@ public class AtletaController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("{id}/treinos")
+
+    @GetMapping("/{id}/treinos")
     public ResponseEntity<List<Treino>> listarTreinos(@PathVariable Long id) {
-        Optional<List<Treino>> atleta = Optional.ofNullable(service.listarTreinosDoAtleta(id));
-        return  atleta.map(ResponseEntity::ok)
+        Optional<List<Treino>> treinos = Optional.ofNullable(service.listarTreinosDoAtleta(id));
+        return  treinos.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+
+    @GetMapping("/{id}/treinos/nome/{nome}")
+    public ResponseEntity<List<Treino>> listarTreinosPorNome(@PathVariable Long id, @PathVariable String nome) {
+        Optional<List<Treino>> treinos = Optional.ofNullable((service.buscarTreinosPorNome(id, nome)));
+        return treinos.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
+    @GetMapping("/{id}/treinos/data/{data}")
+    public ResponseEntity<List<Treino>> listarTreinosPorData(@PathVariable Long id, @PathVariable String data) {
+        Optional<List<Treino>> treinos = Optional.ofNullable((service.buscarTreinosPorData(id, data)));
+        return treinos.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
+    @DeleteMapping("/{id}")
+    public void deletarAtleta(@PathVariable Long id){ service.deletar(id); }
 
 }

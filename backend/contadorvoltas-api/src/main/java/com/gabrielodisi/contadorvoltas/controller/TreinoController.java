@@ -16,11 +16,14 @@ import java.util.Optional;
 @RequestMapping("/treinos")
 public class TreinoController {
 
+
     @Autowired
     private TreinoService service;
 
+
     @GetMapping
     public List<Treino> listar(){ return service.listar(); }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Treino> buscarPorId(@PathVariable Long id){
@@ -30,6 +33,11 @@ public class TreinoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
+    @GetMapping("/{id}/voltas")
+    public List<Volta> listarVoltas(@PathVariable Long id) { return service.listarVoltas(id); }
+
+
     @PostMapping
     public ResponseEntity<Treino> salvar(@RequestBody Treino treino) {
         Treino salvo = service.salvar(treino);
@@ -38,14 +46,16 @@ public class TreinoController {
                 .body(salvo);
     }
 
+
     @PostMapping("/{id}/voltas")
-    public ResponseEntity<Void> registrarVolta(
-            @PathVariable Long id,
-            @RequestBody Volta request) {
-
-        service.registrarVolta(id, (request.getTempoVolta()) );
-
+    public ResponseEntity<Void> registrarVolta(@PathVariable Long id, @RequestBody Volta volta) {
+        service.registrarVolta(id, (volta.getTempoVolta()) );
         return ResponseEntity.ok().build();
     }
+
+
+    @DeleteMapping("/{id}")
+    public void deletarTreino(@PathVariable Long id) { service.deletar(id); }
+
 
 }

@@ -43,12 +43,13 @@ public class TreinoService {
     public List<Volta> listarVoltas(Long treinoId) {
         Optional<Treino> treino = repository.findById(treinoId);
         if (treino.isPresent()) {
-            return treino.get().getVoltas();
+            return repository.listarVoltas(treinoId);
         }
         else {
             throw new RuntimeException("Treino não encontrado");
         }
     }
+
 
 
 }
