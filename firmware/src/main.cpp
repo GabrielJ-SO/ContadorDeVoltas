@@ -1,9 +1,10 @@
 #include <Arduino.h>
 #include <SPI.h>
+#include <WiFiS3.h>
 #include <MD_MAX72xx.h>
 #include <MD_Parola.h>
 
-#define HARDWARE_TYPE MD_MAX72XX::PAROLA_HW
+#define HARDWARE_TYPE MD_MAX72XX::FC16_HW
 #define MAX_DEVICES 12
 #define CS_PIN 10
 
@@ -16,25 +17,45 @@ const int sensorB = 3;
 
 unsigned long tempoA = 0;
 unsigned long tempoB = 0;
-constexpr int janelaTempo = 300;
-bool estadoAnteriorA = LOW;
-bool estadoAnteriorB = LOW;
+constexpr int janelaTempo = 500;
+bool estadoAnteriorA = HIGH;
+bool estadoAnteriorB = HIGH;
 
+ /// VARIAVEIS DE CONTROLE
 int voltas = 0;
 unsigned long tempoInicial = 0;
 unsigned int tempoVolta = 0;
 unsigned int tempoVoltaPassada = 0;
 bool corridaAtiva = false;
+long treinoId = -1;
 
- /// Funções
+ /// FUNÇÕES
 void lerSensores();
 void atualizaDisplay();
 void registraVolta();
+void enviarVoltaParaAPI(long treinoId, unsigned int tempoVolta);
+
+ /// CONFIGURAÇÕES DE REDE
+char ssid[] = "nome_rede";
+char pass[] = "sehna";
+
+IPAddress local_IP(192, 168, 1, 150);
+IPAddress gateway(192, 168, 1, 1);
+IPAddress subnet(255, 255, 255, 0);
+
+  // CONFIGURAÇÕES DA API
+char server[] = "192.168.1.X";
+int port = 8080;
+
+WiFiServer serverLocal(80);
+WiFiClient client;
 
 void setup() {
+   /// Inicia Sensores
   pinMode(sensorA, INPUT_PULLUP);
   pinMode(sensorB, INPUT_PULLUP);
 
+   /// Inicia Displays
   P.begin(3);
   P.setZone(0, 0, 3);
   P.setZone(1, 4, 7);
@@ -42,6 +63,35 @@ void setup() {
   P.addChar(0, 58, fontColon);
   P.setIntensity(5);
   P.displayClear();
+
+   /// Inicia a conexão com a rede
+  Serial.begin(9600);
+  WiFi.config(local_IP, gateway, subnet);
+  WiFi.begin(ssid, pass);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.println("Conectando...");
+  }
+
+  Serial.println("Conectado ao Wifi!!");
+
+  serverLocal.begin();
+  Serial.println("Aguardando ID do treino pelo App...");
+
+  unsigned long timeout = millis();
+  while (treinoId == -1 && (millis() - timeout < 60000)) {
+    WiFiClient appClient = serverLocal.available();
+    if (appClient) {
+      String request = appClient.readStringUntil('\r');
+      int pos = request.indexOf("id=");
+      if (pos != -1) {
+        treinoId = request.substring(pos + 3, request.indexOf(" ", pos)).toInt();
+      }
+      appClient.println("HTTP/1.1 200 OK\r\n\r\nID OK");
+      appClient.stop();
+    }
+  }
 }
 
 void loop() {
@@ -53,11 +103,11 @@ void lerSensores() {
   bool leituraA = digitalRead(sensorA);
   bool leituraB = digitalRead(sensorB);
 
-  if (leituraA == HIGH && estadoAnteriorA == LOW) {
+  if (leituraA == LOW && estadoAnteriorA == HIGH) {
    tempoA = millis();
   }
 
-  if (leituraB == HIGH && estadoAnteriorB == LOW) {
+  if (leituraB == LOW && estadoAnteriorB == HIGH) {
     tempoB = millis();
   }
 
@@ -114,5 +164,24 @@ void registraVolta() {
     tempoVolta = (millis() - tempoInicial) / 1000 - tempoVoltaPassada;
     tempoVoltaPassada += tempoVolta;
     voltas++;
+    enviarVoltaParaAPI(treinoId, tempoVolta * 1000);
+  }
+}
+
+void enviarVoltaParaAPI(long treinoId, unsigned int tempoVolta) {
+  if (client.connect(server, port)) {
+    String jsonData = "{\"tempoVolta\":" + String(tempoVolta) + "}";
+
+    client.print("POST /treinos/");
+    client.print(treinoId);
+    client.println("/voltas HTTP/1.1");
+
+    client.print("Host: "); client.println(server);
+    client.println("Content-Type: application/json");
+    client.print("Content-Length: "); client.println(jsonData.length());
+    client.println("Connection: close");
+    client.println();
+    client.print(jsonData);
+    client.stop();
   }
 }
