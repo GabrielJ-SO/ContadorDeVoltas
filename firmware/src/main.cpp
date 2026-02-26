@@ -23,9 +23,9 @@ bool estadoAnteriorB = HIGH;
 
  /// VARIAVEIS DE CONTROLE
 int voltas = 0;
-unsigned long tempoInicial = 0;
+unsigned long tempoTotal = 0;
 unsigned int tempoVolta = 0;
-unsigned int tempoVoltaPassada = 0;
+unsigned int somaTempoVoltas = 0;
 bool corridaAtiva = false;
 long treinoId = -1;
 
@@ -37,7 +37,7 @@ void enviarVoltaParaAPI(long treinoId, unsigned int tempoVolta);
 
  /// CONFIGURAÇÕES DE REDE
 char ssid[] = "nome_rede";
-char pass[] = "sehna";
+char pass[] = "senha";
 
 IPAddress local_IP(192, 168, 1, 150);
 IPAddress gateway(192, 168, 1, 1);
@@ -69,29 +69,64 @@ void setup() {
   WiFi.config(local_IP, gateway, subnet);
   WiFi.begin(ssid, pass);
 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.println("Conectando...");
+  unsigned long timeout = millis();
+  while (WiFi.status() != WL_CONNECTED && (millis() - timeout < 15000)) {
+    delay(300);
   }
 
-  Serial.println("Conectado ao Wifi!!");
+  if (WiFi.status() == WL_CONNECTED) {
+    P.displayZoneText(2, "Ligado", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayZoneText(1, "ao", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayZoneText(0, "Wifi!!", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayAnimate();
+    delay(3000);
 
-  serverLocal.begin();
-  Serial.println("Aguardando ID do treino pelo App...");
+    serverLocal.begin();
 
-  unsigned long timeout = millis();
-  while (treinoId == -1 && (millis() - timeout < 60000)) {
-    WiFiClient appClient = serverLocal.available();
-    if (appClient) {
-      String request = appClient.readStringUntil('\r');
-      int pos = request.indexOf("id=");
-      if (pos != -1) {
-        treinoId = request.substring(pos + 3, request.indexOf(" ", pos)).toInt();
+    P.displayClear();
+    P.displayZoneText(1, "Aguardando inicio do treino pelo App...", PA_CENTER, 50, 0, PA_SCROLL_LEFT, PA_SCROLL_LEFT);
+    timeout = millis();
+    while (treinoId == -1 && (millis() - timeout < 60000)) {
+      if (P.displayAnimate()) {
+        if (P.getZoneStatus(1)) {
+          P.displayReset(1);
+        }
       }
-      appClient.println("HTTP/1.1 200 OK\r\n\r\nID OK");
-      appClient.stop();
+      delay(20);
+
+      WiFiClient appClient = serverLocal.available();
+      if (appClient) {
+        String request = appClient.readStringUntil('\r');
+        int pos = request.indexOf("id=");
+        if (pos != -1) {
+          treinoId = request.substring(pos + 3, request.indexOf(" ", pos)).toInt();
+        }
+        appClient.println("HTTP/1.1 200 OK\r\n\r\nID OK");
+        appClient.stop();
+      }
     }
   }
+  else {
+    P.displayZoneText(2, "Falha", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayZoneText(1, "na:", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayZoneText(0, "conexão", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayAnimate();
+    delay(3000);
+  }
+
+  if (treinoId != -1) {
+    P.displayZoneText(2, "Modo de", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayZoneText(1, "treino:", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayZoneText(0, "Online", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayAnimate();
+  }else {
+    P.displayZoneText(2, "Modo de", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayZoneText(1, "treino:", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayZoneText(0, "offline", PA_CENTER, 0, 0, PA_PRINT, PA_NO_EFFECT);
+    P.displayAnimate();
+  }
+
+
 }
 
 void loop() {
@@ -127,15 +162,15 @@ void lerSensores() {
 void atualizaDisplay() {
   unsigned long tempoAtual = 0;
   if (corridaAtiva) {
-    tempoAtual = (millis() - tempoInicial) / 1000;
+    tempoAtual = (millis() - tempoTotal);
   }
   else {
     return;
   }
 
-  unsigned int horas = (tempoAtual / 60) / 60;
-  unsigned int minutos = (tempoAtual / 60) % 60;
-  unsigned int segundos = tempoAtual % 60;
+  unsigned int horas = (tempoAtual / 1000) / 60 / 60;
+  unsigned int minutos = (tempoAtual / 1000) / 60 % 60;
+  unsigned int segundos = (tempoAtual / 1000) % 60;
 
   char bufferTempo[20];
   char bufferVoltas[20];
@@ -158,13 +193,17 @@ void atualizaDisplay() {
 
 void registraVolta() {
   if (!corridaAtiva) {
-    tempoInicial = millis();
+    tempoTotal = millis();
     corridaAtiva = true;
   }else {
-    tempoVolta = (millis() - tempoInicial) / 1000 - tempoVoltaPassada;
-    tempoVoltaPassada += tempoVolta;
+    if (WiFi.status() == WL_CONNECTED && treinoId != -1) {
+      unsigned int tempoVoltaAPI = (millis() - tempoTotal) - somaTempoVoltas * 1000;
+      enviarVoltaParaAPI(treinoId, tempoVoltaAPI);
+    }
+
+    tempoVolta = (millis() - tempoTotal) / 1000 - somaTempoVoltas;
+    somaTempoVoltas += tempoVolta;
     voltas++;
-    enviarVoltaParaAPI(treinoId, tempoVolta * 1000);
   }
 }
 
@@ -183,5 +222,5 @@ void enviarVoltaParaAPI(long treinoId, unsigned int tempoVolta) {
     client.println();
     client.print(jsonData);
     client.stop();
-  }
+    }
 }
