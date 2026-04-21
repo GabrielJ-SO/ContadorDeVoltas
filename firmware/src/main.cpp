@@ -12,20 +12,21 @@ static uint8_t fontColon[] = { 1, 0x24 };
 
 MD_Parola P = MD_Parola(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
 
-const int sensorA = 2;
-const int sensorB = 3;
+constexpr int sensorA = 2;
+constexpr int sensorB = 3;
 
+ /// VARIAVEIS DE CONTROLE DOS SENSORES
 unsigned long tempoA = 0;
 unsigned long tempoB = 0;
-constexpr int janelaTempo = 500;
+constexpr long janelaTempo = 1000;
 bool estadoAnteriorA = HIGH;
 bool estadoAnteriorB = HIGH;
 
- /// VARIAVEIS DE CONTROLE
+ /// VARIAVEIS DE CONTROLE DE CORRIDA
 int voltas = 0;
 unsigned long tempoTotal = 0;
-unsigned int tempoVolta = 0;
-unsigned int somaTempoVoltas = 0;
+unsigned long tempoVolta = 0;
+unsigned long somaTempoVoltas = 0;
 bool corridaAtiva = false;
 long treinoId = -1;
 
@@ -33,10 +34,10 @@ long treinoId = -1;
 void lerSensores();
 void atualizaDisplay();
 void registraVolta();
-void enviarVoltaParaAPI(long treinoId, unsigned int tempoVolta);
+void enviarVoltaParaAPI(long treinoId, unsigned long tempoVolta);
 
  /// CONFIGURAÇÕES DE REDE
-char ssid[] = "nome_rede";
+char ssid[] = "nome";
 char pass[] = "senha";
 
 IPAddress local_IP(192, 168, 1, 150);
@@ -44,7 +45,7 @@ IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
   // CONFIGURAÇÕES DA API
-char server[] = "192.168.1.X";
+char server[] = "ip_servidor";
 int port = 8080;
 
 WiFiServer serverLocal(80);
@@ -71,7 +72,7 @@ void setup() {
 
   unsigned long timeout = millis();
   while (WiFi.status() != WL_CONNECTED && (millis() - timeout < 15000)) {
-    delay(300);
+    delay(500);
   }
 
   if (WiFi.status() == WL_CONNECTED) {
@@ -168,9 +169,9 @@ void atualizaDisplay() {
     return;
   }
 
-  unsigned int horas = (tempoAtual / 1000) / 60 / 60;
-  unsigned int minutos = (tempoAtual / 1000) / 60 % 60;
-  unsigned int segundos = (tempoAtual / 1000) % 60;
+  unsigned long horas = (tempoAtual / 1000) / 60 / 60;
+  unsigned long minutos = (tempoAtual / 1000) / 60 % 60;
+  unsigned long segundos = (tempoAtual / 1000) % 60;
 
   char bufferTempo[20];
   char bufferVoltas[20];
@@ -197,7 +198,7 @@ void registraVolta() {
     corridaAtiva = true;
   }else {
     if (WiFi.status() == WL_CONNECTED && treinoId != -1) {
-      unsigned int tempoVoltaAPI = (millis() - tempoTotal) - somaTempoVoltas * 1000;
+      unsigned long tempoVoltaAPI = (millis() - tempoTotal) - somaTempoVoltas * 1000;
       enviarVoltaParaAPI(treinoId, tempoVoltaAPI);
     }
 
@@ -207,7 +208,7 @@ void registraVolta() {
   }
 }
 
-void enviarVoltaParaAPI(long treinoId, unsigned int tempoVolta) {
+void enviarVoltaParaAPI(long treinoId, unsigned long tempoVolta) {
   if (client.connect(server, port)) {
     String jsonData = "{\"tempoVolta\":" + String(tempoVolta) + "}";
 
