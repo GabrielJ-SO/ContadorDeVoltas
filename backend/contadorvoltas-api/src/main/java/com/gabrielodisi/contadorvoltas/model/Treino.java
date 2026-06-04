@@ -2,17 +2,14 @@ package com.gabrielodisi.contadorvoltas.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Data
 @Entity
-public class Treino {
+@Inheritance(strategy = InheritanceType.JOINED)
+abstract public class Treino {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,14 +17,15 @@ public class Treino {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "atleta_id")
-    private Atleta atleta;
+    Atleta atleta;
 
-    private int totalVoltas;
     private String nome;
-    private int voltasConcluidas = 0;
-    private LocalDate dataTreino = LocalDate.now();
-    private long tempo = 0;
+    private LocalDate data;
     private boolean concluido;
+    private boolean publico;
+
+    protected abstract void registrarVolta(long tempoVolta);
+    public abstract long getTempoTotal();
 
     @ElementCollection
     @CollectionTable(
@@ -37,29 +35,19 @@ public class Treino {
     @JsonIgnore
     private List<Volta> voltas = new ArrayList<>();
 
-    public void adicionarVolta(Long tempoVolta) {
-        if (this.concluido) {
-            throw new IllegalStateException("Treino já foi concluído");
+    @Embeddable
+    public class Volta {
+
+        private int numero;
+        private long tempo;
+
+        protected Volta(int numero, long tempo) {
+            this.numero = numero;
+            this.tempo = tempo;
         }
 
-        this.voltasConcluidas++;
-        int numero = voltas.size() + 1;
-        voltas.add(new Volta(numero, tempoVolta));
+        public Volta() {}
 
-        recalcularTempoTotal();
 
-        if (numero == this.totalVoltas) {
-            concluirTreino();
-        }
-    }
-
-    public void concluirTreino() {
-        this.concluido = true;
-    }
-
-    private void recalcularTempoTotal() {
-        this.tempo = voltas.stream()
-                .mapToLong(Volta::getTempoVolta)
-                .sum();
     }
 }
