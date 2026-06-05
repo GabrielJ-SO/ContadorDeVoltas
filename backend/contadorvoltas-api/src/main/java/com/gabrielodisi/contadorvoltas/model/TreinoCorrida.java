@@ -10,11 +10,25 @@ public class TreinoCorrida extends Treino {
 
     @Override
     protected void registrarVolta(long tempoVolta) {
-
+        if (isConcluido()) {
+            int numeroVolta = getVoltas().size() + 1;
+            getVoltas().add(new Volta(numeroVolta, tempoVolta));
+        }
+        else {
+            concluirTreino();
+        }
     }
 
     @Override
     public long getTempoTotal() {
-        return 0;
+        return getVoltas().stream()
+                .mapToLong(Volta::getTempo)
+                .sum();
     }
+
+    @Override
+    public boolean isConcluido() {
+        return numeroVoltas >= getVoltas().size();
+    }
+
 }

@@ -5,17 +5,22 @@ import jakarta.persistence.Entity;
 @Entity
 public class TreinoLivre extends Treino {
 
-    public int getNumeroVoltas() {
-        return 0;
-    }
 
     @Override
     protected void registrarVolta(long tempoVolta) {
-
+        int numeroVolta = getVoltas().size() + 1;
+        getVoltas().add(new Volta(numeroVolta, tempoVolta));
     }
 
     @Override
     public long getTempoTotal() {
-        return 0;
+        return getVoltas().stream()
+                .mapToLong(Volta::getTempo)
+                .sum();
+    }
+
+    @Override
+    public boolean isConcluido() {
+        return true;
     }
 }
