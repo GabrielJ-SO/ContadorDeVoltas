@@ -7,7 +7,7 @@ public class TreinoLivre extends Treino {
 
 
     @Override
-    protected void registrarVolta(long tempoVolta) {
+    public void registrarVolta(long tempoVolta) {
         int numeroVolta = getVoltas().size() + 1;
         getVoltas().add(new Volta(numeroVolta, tempoVolta));
     }

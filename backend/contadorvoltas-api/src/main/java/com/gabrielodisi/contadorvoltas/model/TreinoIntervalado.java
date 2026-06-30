@@ -41,7 +41,7 @@ public class TreinoIntervalado extends Treino {
     }
 
     @Override
-    protected void registrarVolta(long tempoVolta) {
+    public void registrarVolta(long tempoVolta) {
         if (!isConcluido()) {
             registrarVoltaRepeticao(tempoVolta);
 

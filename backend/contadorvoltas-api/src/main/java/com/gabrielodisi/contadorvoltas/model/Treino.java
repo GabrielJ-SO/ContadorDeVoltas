@@ -29,7 +29,7 @@ abstract public class Treino {
     @Setter
     private boolean publico;
 
-    protected abstract void registrarVolta(long tempoVolta);
+    public abstract void registrarVolta(long tempoVolta);
     public abstract long getTempoTotal();
     public abstract boolean isConcluido();
 
