@@ -1,0 +1,35 @@
+package com.gabrielodisi.contadorvoltas.controller;
+
+import com.gabrielodisi.contadorvoltas.model.Atleta;
+import com.gabrielodisi.contadorvoltas.service.AtletaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/atleta")
+public class AtletaController {
+
+    @Autowired
+    private AtletaService service;
+
+    @GetMapping
+    public List<Atleta> listar(){ return service.listar(); }
+
+    @PostMapping
+    public Atleta salvar(@RequestBody Atleta atleta){ return service.salvar(atleta); }
+
+    @DeleteMapping("/{id}")
+    public void deletarAtleta(@PathVariable Long id){ service.deletar(id); }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Atleta> buscarPorId(@PathVariable long id){
+        Optional<Atleta> atleta = service.buscarPorId(id);
+        return atleta.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+}
