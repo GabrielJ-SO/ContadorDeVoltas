@@ -1,12 +1,11 @@
 package com.gabrielodisi.contadorvoltas.model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 @Entity
 public class TreinoCorrida extends Treino {
 
     private int numeroVoltas;
-
 
     @Override
     public void registrarVolta(long tempoVolta) {

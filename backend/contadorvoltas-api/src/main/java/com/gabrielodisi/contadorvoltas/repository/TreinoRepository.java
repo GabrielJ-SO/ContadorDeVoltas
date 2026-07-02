@@ -1,7 +1,7 @@
 package com.gabrielodisi.contadorvoltas.repository;
 
 import com.gabrielodisi.contadorvoltas.model.Treino;
-import com.gabrielodisi.contadorvoltas.model.Treino.Volta;
+import com.gabrielodisi.contadorvoltas.model.Volta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

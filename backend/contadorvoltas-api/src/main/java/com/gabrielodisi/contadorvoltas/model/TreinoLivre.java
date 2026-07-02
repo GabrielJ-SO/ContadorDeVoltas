@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 @Entity
 public class TreinoLivre extends Treino {
 
-
     @Override
     public void registrarVolta(long tempoVolta) {
         int numeroVolta = getVoltas().size() + 1;

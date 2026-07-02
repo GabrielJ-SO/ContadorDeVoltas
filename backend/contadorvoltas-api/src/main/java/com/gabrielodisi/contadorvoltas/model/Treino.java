@@ -1,16 +1,14 @@
 package com.gabrielodisi.contadorvoltas.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
+@Getter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract public class Treino {
@@ -18,6 +16,10 @@ abstract public class Treino {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ElementCollection
+    @CollectionTable(name = "treino_voltas", joinColumns = @JoinColumn(name = "treino_id"))
+    private List<Volta> voltas = new ArrayList<>();
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "atleta_id")
@@ -39,28 +41,6 @@ abstract public class Treino {
 
     public int getNumeroVoltasConcluidas() {
         return this.voltas.size();
-    }
-
-    @ElementCollection
-    @CollectionTable(
-            name = "treino_voltas",
-            joinColumns = @JoinColumn(name = "treino_id")
-    )
-    @JsonIgnore
-    @Getter
-    private List<Volta> voltas = new ArrayList<>();
-
-    @Getter
-    @NoArgsConstructor
-    @Embeddable
-    public static class Volta {
-        private int numero;
-        private long tempo;
-
-        protected Volta(int numero, long tempo) {
-            this.numero = numero;
-            this.tempo = tempo;
-        }
     }
 
 }

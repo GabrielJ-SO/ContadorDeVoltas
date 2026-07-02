@@ -1,7 +1,6 @@
 package com.gabrielodisi.contadorvoltas.service;
 
 import com.gabrielodisi.contadorvoltas.model.Atleta;
-import com.gabrielodisi.contadorvoltas.model.Treino;
 import com.gabrielodisi.contadorvoltas.repository.AtletaRepository;
 import com.gabrielodisi.contadorvoltas.repository.TreinoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
