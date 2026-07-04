@@ -32,4 +32,11 @@ public class AtletaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/login/{nome}/{senha}")
+    public ResponseEntity<Atleta> login(@PathVariable String nome, @PathVariable String senha) {
+        Optional<Atleta> atleta = service.login(nome, senha);
+        return atleta.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }

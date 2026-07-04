@@ -5,6 +5,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
 abstract public class Pessoa {
@@ -17,6 +18,7 @@ abstract public class Pessoa {
     @Getter
     private String nome;
 
+    @Setter
     private String senha;
 
 }

@@ -32,8 +32,8 @@ public class AtletaService {
         }
     }
 
-    public Optional<Atleta> fazerLogin(String nome, String senha) {
-        Optional<Atleta> atleta = repository.buscarIdPorNomeESenha(nome, senha);
+    public Optional<Atleta> login(String nome, String senha) {
+        Optional<Atleta> atleta = repository.buscarPorNomeESenha(nome, senha);
 
         if (atleta.isPresent()) {
             return atleta;
@@ -42,4 +42,5 @@ public class AtletaService {
             throw new RuntimeException("Atleta não encontrado.");
         }
     }
+
 }
