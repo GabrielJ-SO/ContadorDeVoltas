@@ -1,21 +1,24 @@
 package com.gabrielodisi.contadorvoltas.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 public class TreinoCorrida extends Treino {
 
+    @Setter
+    @Getter
     private int numeroVoltas;
 
     @Override
     public void registrarVolta(long tempoVolta) {
-        if (isConcluido()) {
-            int numeroVolta = getVoltas().size() + 1;
-            getVoltas().add(new Volta(numeroVolta, tempoVolta));
-        }
-        else {
-            concluirTreino();
-        }
+        if (isConcluido()) { throw new IllegalStateException("Treino já foi concluído"); }
+
+        int numeroVolta = getVoltas().size() + 1;
+        getVoltas().add(new Volta(numeroVolta, tempoVolta));
+
+        if (isConcluido()) { concluirTreino(); }
     }
 
     @Override
@@ -27,7 +30,7 @@ public class TreinoCorrida extends Treino {
 
     @Override
     public boolean isConcluido() {
-        return numeroVoltas >= getVoltas().size();
+        return numeroVoltas == getVoltas().size();
     }
 
 }

@@ -1,14 +1,14 @@
 package com.gabrielodisi.contadorvoltas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@Data
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract public class Treino {
@@ -27,8 +27,7 @@ abstract public class Treino {
 
     private String nome;
     private LocalDate data = LocalDate.now();
-    private boolean concluido;
-    @Setter
+    private boolean concluido = false;
     private boolean publico;
 
     public abstract void registrarVolta(long tempoVolta);

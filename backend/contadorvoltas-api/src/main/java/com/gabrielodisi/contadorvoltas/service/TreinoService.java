@@ -20,8 +20,6 @@ public class TreinoService {
 
     public Optional<Treino> buscarPorId(Long id) { return repository.findById(id); }
 
-    public Treino salvar(Treino treino) { return repository.save(treino); }
-
     public void deletar(Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);

@@ -26,7 +26,7 @@ public class AtletaController {
     public void deletarAtleta(@PathVariable Long id){ service.deletar(id); }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Atleta> buscarPorId(@PathVariable long id){
+    public ResponseEntity<Atleta> buscarPorId(@PathVariable Long id){
         Optional<Atleta> atleta = service.buscarPorId(id);
         return atleta.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

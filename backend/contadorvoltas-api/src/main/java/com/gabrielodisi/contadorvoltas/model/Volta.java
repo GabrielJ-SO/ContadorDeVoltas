@@ -1,9 +1,9 @@
 package com.gabrielodisi.contadorvoltas.model;
 
 import jakarta.persistence.Embeddable;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 @Embeddable
 public class Volta {
 

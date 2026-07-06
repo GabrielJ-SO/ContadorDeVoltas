@@ -13,4 +13,5 @@ public class Atleta extends Pessoa {
     @OneToMany(mappedBy = "atleta", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Treino> treinos;
+
 }
