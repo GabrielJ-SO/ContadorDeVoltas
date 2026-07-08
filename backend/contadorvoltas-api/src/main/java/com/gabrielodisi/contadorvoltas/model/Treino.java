@@ -1,6 +1,5 @@
 package com.gabrielodisi.contadorvoltas.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +16,7 @@ abstract public class Treino {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "treino_voltas", joinColumns = @JoinColumn(name = "treino_id"))
     private List<Volta> voltas = new ArrayList<>();
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("treinos/corrida")
+@RequestMapping("/treinos/corrida")
 public class TreinoCorridaController {
 
     @Autowired
@@ -24,9 +24,6 @@ public class TreinoCorridaController {
         service.registrarVolta(id, (volta.getTempo()) );
         return ResponseEntity.ok().build();
     }
-
-    @DeleteMapping("/del/{id}")
-    public void deletarTreinoCorrida(@PathVariable Long id) { service.deletar(id); }
 
     @GetMapping("/buscar/{id}")
     public ResponseEntity<TreinoCorrida> buscarPorId(@PathVariable Long id) {
