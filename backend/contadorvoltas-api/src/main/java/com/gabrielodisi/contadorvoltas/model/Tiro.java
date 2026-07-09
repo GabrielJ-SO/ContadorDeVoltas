@@ -20,21 +20,21 @@ public class Tiro {
     TreinoIntervalado treinoIntervalado;
 
     private int numero;
-    private boolean concluido;
+    private int numeroVoltas;
 
-    @ElementCollection
-    @CollectionTable(name = "repeticao_voltas", joinColumns = @JoinColumn(name = "treino_id"))
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "tiro_voltas", joinColumns = @JoinColumn(name = "tiro_id"))
     private List<Volta> voltas = new ArrayList<>();
 
-    public Tiro(int numero) {
+    public Tiro(int numero, int numeroVoltas, TreinoIntervalado treinoIntervalado) {
         this.numero = numero;
+        this.numeroVoltas = numeroVoltas;
+        this.treinoIntervalado = treinoIntervalado;
     }
 
-    protected void registrarVolta(int numeroVoltas, long tempoVolta) {
-        this.voltas.add(new Volta(voltas.size() + 1, tempoVolta));
-
-        if (numeroVoltas >= this.voltas.size()) {
-            this.concluido = true;
+    protected void registrarVolta(long tempoVolta) {
+        if (!isConcluido()) {
+            this.voltas.add(new Volta(voltas.size() + 1, tempoVolta));
         }
     }
 
@@ -42,6 +42,10 @@ public class Tiro {
         return getVoltas().stream()
                 .mapToLong(Volta::getTempo)
                 .sum();
+    }
+
+    public boolean isConcluido() {
+        return voltas.size() == numeroVoltas;
     }
 
 }
