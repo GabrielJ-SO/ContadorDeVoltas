@@ -1,6 +1,7 @@
 package com.gabrielodisi.contadorvoltas.controller;
 
 import com.gabrielodisi.contadorvoltas.model.Atleta;
+import com.gabrielodisi.contadorvoltas.model.Treino;
 import com.gabrielodisi.contadorvoltas.service.AtletaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,6 @@ public class AtletaController {
 
     @Autowired
     private AtletaService service;
-
-    @GetMapping
-    public List<Atleta> listar(){ return service.listar(); }
 
     @PostMapping
     public Atleta salvar(@RequestBody Atleta atleta){ return service.salvar(atleta); }
@@ -36,6 +34,13 @@ public class AtletaController {
     public ResponseEntity<Atleta> login(@PathVariable String nome, @PathVariable String senha) {
         Optional<Atleta> atleta = service.login(nome, senha);
         return atleta.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/treinos")
+    public ResponseEntity<List<Treino>> listarTreinos(@PathVariable Long id){
+        Optional<List<Treino>> treinos = Optional.ofNullable(service.listarTreinos(id));
+        return treinos.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
