@@ -1,6 +1,6 @@
 package com.gabrielodisi.contadorvoltas.controller;
 
-import com.gabrielodisi.contadorvoltas.model.TreinoIntervalado;
+import com.gabrielodisi.contadorvoltas.model.treinos.TreinoIntervalado;
 import com.gabrielodisi.contadorvoltas.service.TreinoIntervaladoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

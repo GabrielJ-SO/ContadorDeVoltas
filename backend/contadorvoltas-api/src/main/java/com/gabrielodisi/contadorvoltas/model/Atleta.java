@@ -1,6 +1,7 @@
 package com.gabrielodisi.contadorvoltas.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gabrielodisi.contadorvoltas.model.treinos.Treino;
 import jakarta.persistence.*;
 import lombok.Getter;
 

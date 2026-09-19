@@ -1,6 +1,6 @@
 package com.gabrielodisi.contadorvoltas.service;
 
-import com.gabrielodisi.contadorvoltas.model.TreinoIntervalado;
+import com.gabrielodisi.contadorvoltas.model.treinos.TreinoIntervalado;
 import com.gabrielodisi.contadorvoltas.repository.TreinoIntervaladoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

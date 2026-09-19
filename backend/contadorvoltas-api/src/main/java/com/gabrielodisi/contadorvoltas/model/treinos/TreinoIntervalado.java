@@ -1,4 +1,4 @@
-package com.gabrielodisi.contadorvoltas.model;
+package com.gabrielodisi.contadorvoltas.model.treinos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -38,26 +38,26 @@ public class TreinoIntervalado extends Treino {
     }
 
     @Override
+    public void finalizarTreino() {
+        if (this.getEstado() != EstadoTreino.CONCLUIDO) {
+            this.setEstado(EstadoTreino.INCOMPLETO);
+        }
+    }
+
+    @Override
     public void registrarVolta(long tempoVolta) {
         if (!isConcluido()) {
             registrarVoltaTiros(tempoVolta);
 
             int numero = getVoltas().size() + 1;
             getVoltas().add(new Volta(numero,  tempoVolta));
+            super.distanciaCorridaMetros += Volta.DISTANCIA_VOLTA_METROS;
         }
-        else {
-            concluirTreino();
-        }
+
+        if (isConcluido()) { concluirTreino(); }
     }
 
-    @Override
-    public long getTempoTotal() {
-        return getVoltas().stream()
-                .mapToLong(Volta::getTempo)
-                .sum();
-    }
 
-    @Override
     public boolean isConcluido() { return numeroTiros == tiros.size() && tiros.getLast().isConcluido(); }
 
 }

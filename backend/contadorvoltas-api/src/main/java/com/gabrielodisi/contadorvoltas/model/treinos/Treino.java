@@ -1,5 +1,6 @@
-package com.gabrielodisi.contadorvoltas.model;
+package com.gabrielodisi.contadorvoltas.model.treinos;
 
+import com.gabrielodisi.contadorvoltas.model.Atleta;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,15 +27,20 @@ abstract public class Treino {
 
     private String nome;
     private LocalDate data = LocalDate.now();
-    private boolean concluido = false;
-    private boolean publico;
+    private EstadoTreino estado = EstadoTreino.NAO_INICIADO;
+    protected int distanciaCorridaMetros = 0;
 
     public abstract void registrarVolta(long tempoVolta);
-    public abstract long getTempoTotal();
-    public abstract boolean isConcluido();
+    public abstract void finalizarTreino();
 
-    protected void concluirTreino() {
-        this.concluido = true;
+    public long getTempoTotalMS() {
+        return getVoltas().stream()
+              .mapToLong(Volta::getTempo)
+              .sum();
+    }
+
+    public void concluirTreino() {
+        this.estado = EstadoTreino.CONCLUIDO;
     }
 
     public int getNumeroVoltasConcluidas() {

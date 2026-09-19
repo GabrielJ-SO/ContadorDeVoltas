@@ -1,4 +1,4 @@
-package com.gabrielodisi.contadorvoltas.model;
+package com.gabrielodisi.contadorvoltas.model.treinos;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,6 +21,7 @@ public class Tiro {
 
     private int numero;
     private int numeroVoltas;
+    private int distanciaCorridaMetros;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tiro_voltas", joinColumns = @JoinColumn(name = "tiro_id"))
@@ -35,6 +36,7 @@ public class Tiro {
     protected void registrarVolta(long tempoVolta) {
         if (!isConcluido()) {
             this.voltas.add(new Volta(voltas.size() + 1, tempoVolta));
+            this.distanciaCorridaMetros += Volta.DISTANCIA_VOLTA_METROS;
         }
     }
 

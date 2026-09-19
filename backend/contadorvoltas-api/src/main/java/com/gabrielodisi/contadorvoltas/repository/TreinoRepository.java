@@ -1,7 +1,7 @@
 package com.gabrielodisi.contadorvoltas.repository;
 
-import com.gabrielodisi.contadorvoltas.model.Treino;
-import com.gabrielodisi.contadorvoltas.model.Volta;
+import com.gabrielodisi.contadorvoltas.model.treinos.Treino;
+import com.gabrielodisi.contadorvoltas.model.treinos.Volta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,8 +20,6 @@ public interface TreinoRepository extends JpaRepository<Treino, Long> {
                     "INNER JOIN atleta a ON t.atleta_id = a.id " +
                     "where t.data_treino like %:data_treino% AND a.id = :atleta_id", nativeQuery = true)
     List<Treino> buscarTreinosPorData(@Param("data_treino") String data_treino, @Param("atleta_id") long atleta_id);
-
-
 
     @Query(value = "SELECT tv.numero_volta, tv.tempo_volta FROM treino_voltas tv " +
                     "INNER JOIN treino t ON (t.id = tv.treino_id) " +
