@@ -1,5 +1,4 @@
-#include <Arduino.h>
-#include "freertos/FreeRTOS.h"
+#include "pch.h"
 
 void setup() {
 

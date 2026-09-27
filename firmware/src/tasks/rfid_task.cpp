@@ -1,6 +1,4 @@
-#include <Arduino.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include "pch.h"
 
 #include "tasks/rfid_task.h"
 
@@ -10,7 +8,6 @@ void vRFIDTask(void *pvParemeters)
 {
 
 
-    
     for ( ; ; )
     {
 
@@ -19,4 +16,4 @@ void vRFIDTask(void *pvParemeters)
 }
 
 
-void vStartRFIDTask() { xTaskCreatePinnedToCore(vRFIDTask, "RFID_TASK", 128, NULL, 3, &xRFIDTaskHandle, 0); }
+void vStartRFIDTask() { xTaskCreatePinnedToCore(vRFIDTask, "RFID_TASK", 512, NULL, 3, &xRFIDTaskHandle, 0); }
