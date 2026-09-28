@@ -8,5 +8,6 @@ typedef struct IntervalTraining
     bool          interval, intervalCompleted;
 } IntervalTraining;
 
+bool startIntervalTraining(long trainingId, long athleteTag, unsigned long restTimeMS, int intervals, int numberOfLaps);
 
 #endif

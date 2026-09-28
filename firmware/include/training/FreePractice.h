@@ -7,5 +7,6 @@ typedef struct FreePractice
 } FreePractice;
 
 
+bool startFreePractice(long trainingId, long athleteTag);
 
 #endif

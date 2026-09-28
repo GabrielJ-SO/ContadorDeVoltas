@@ -7,6 +7,8 @@
 #include "RunningWorkout.h"
 #include "IntervalTraining.h"
 
+struct Training;
+
 typedef enum {
     FREE_SLOT,
     FREE_PRACTICE,
@@ -27,8 +29,7 @@ typedef struct {
 } TrainingOP;
 
 
-
-typedef struct Training 
+struct Training
 {
 
     TrainingType  type;
@@ -44,8 +45,8 @@ typedef struct Training
         FreePractice       livre;
         RunningWorkout     corrida;
         IntervalTraining   intervalado;
-    } training;
+    } dataTraining;
 
-} Training;
+};
 
 #endif
