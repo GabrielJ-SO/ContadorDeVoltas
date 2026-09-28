@@ -1,20 +1,20 @@
 #include "training/training.h"
 
-bool lapCounting (Training* t) {
+bool rwLapCounting (Training* t) {
+    return true;
+}
+
+void rwDisplay(Training* t, char* buffer, size_t tamanhoBuffer) {
 
 }
 
-void display(Training* t, char* buffer, size_t tamanhoBuffer) {
+void rwSendLapToAPI(Training* t) {
 
 }
 
-void sendLapToAPI(Training* t) {
-
-}
-
-TrainingOP runningWorkoutOP = { lapCounting, display, sendLapToAPI };
+TrainingOP runningWorkoutOP = { rwLapCounting, rwDisplay,rwSendLapToAPI };
 
 
 bool startRunningWorkout(long trainingId, long atheleteTag, int numberOfLaps) {
-
+    return true;
 }

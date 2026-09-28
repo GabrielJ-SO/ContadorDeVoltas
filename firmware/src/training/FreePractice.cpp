@@ -1,20 +1,20 @@
 #include "training/training.h"
 
-bool lapCounting (Training* t) {
+bool fpLapCounting (Training* t) {
+    return true;
+}
+
+void fpDisplay(Training* t, char* buffer, size_t tamanhoBuffer) {
 
 }
 
-void display(Training* t, char* buffer, size_t tamanhoBuffer) {
+void fpSendLapToAPI(Training* t) {
 
 }
 
-void sendLapToAPI(Training* t) {
-
-}
-
-TrainingOP freePracticeOP = { lapCounting, display, sendLapToAPI };
+TrainingOP fpOP = { fpLapCounting, fpDisplay, fpSendLapToAPI };
 
 
 bool startFreePractice(long trainingId, long athleteTag) {
-
+    return true;
 }
