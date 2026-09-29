@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
 
 #include "tasks/display_task.h"
 
@@ -17,4 +18,4 @@ void vDisplayTask(void *pvParameters)
 }
 
 
-void vStartDisplayTask() { xTaskCreatePinnedToCore(vDisplayTask, "DISPLAY_TASK", 512, NULL, 2, &xDisplayTaskHandle, 1); }
+void vStartDisplayTask() { xTaskCreatePinnedToCore(vDisplayTask, "DISPLAY_TASK", 512, NULL, 3, &xDisplayTaskHandle, 1); }
