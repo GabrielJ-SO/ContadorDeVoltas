@@ -1,4 +1,4 @@
-#include "training/training.h"
+#include "training/Training.h"
 
 bool itLapCounting (Training* t) {
     return true;

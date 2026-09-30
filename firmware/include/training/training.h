@@ -31,7 +31,6 @@ typedef struct {
 
 struct Training
 {
-
     TrainingType  type;
     TrainingOP    ops;
     TrainingState state;
