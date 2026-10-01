@@ -5,8 +5,10 @@ import com.gabrielodisi.contadorvoltas.model.treinos.Treino;
 import com.gabrielodisi.contadorvoltas.repository.AtletaRepository;
 import com.gabrielodisi.contadorvoltas.repository.TreinoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +48,16 @@ public class AtletaService {
         Optional<Atleta> atleta = repository.findById(id);
         if (atleta.isPresent()) {
             return atleta.get().getTreinos();
+        }
+        else {
+            throw new RuntimeException("Atleta não encontrado.");
+        }
+    }
+
+    public List<Treino> listarTreinosComLimite(long id, int inicio, int fim) {
+        Optional<Atleta> atleta = repository.findById(id);
+        if (atleta.isPresent()) {
+            return repository.listarTreinosComLimite(id, PageRequest.of(inicio, fim));
         }
         else {
             throw new RuntimeException("Atleta não encontrado.");

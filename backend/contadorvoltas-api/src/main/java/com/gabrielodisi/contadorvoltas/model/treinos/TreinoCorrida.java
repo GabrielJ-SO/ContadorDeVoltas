@@ -22,11 +22,4 @@ public class TreinoCorrida extends Treino {
         if (this.numeroVoltas == getVoltas().size()) { concluirTreino(); }
     }
 
-    @Override
-    public void finalizarTreino() {
-        if (this.getEstado() != EstadoTreino.CONCLUIDO) {
-            this.setEstado(EstadoTreino.INCOMPLETO);
-        }
-    }
-
 }

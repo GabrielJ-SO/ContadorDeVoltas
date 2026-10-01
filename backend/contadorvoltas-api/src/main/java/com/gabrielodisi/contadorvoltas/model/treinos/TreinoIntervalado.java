@@ -38,13 +38,6 @@ public class TreinoIntervalado extends Treino {
     }
 
     @Override
-    public void finalizarTreino() {
-        if (this.getEstado() != EstadoTreino.CONCLUIDO) {
-            this.setEstado(EstadoTreino.INCOMPLETO);
-        }
-    }
-
-    @Override
     public void registrarVolta(long tempoVolta) {
         if (!isConcluido()) {
             registrarVoltaTiros(tempoVolta);

@@ -44,4 +44,11 @@ public class AtletaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{id}/treinos/{inicio}/{fim}")
+    public ResponseEntity<List<Treino>> listarTreinosComLimite(@PathVariable Long id, @PathVariable Integer inicio, @PathVariable Integer fim){
+        Optional<List<Treino>> treinos = Optional.ofNullable(service.listarTreinosComLimite(id, inicio, fim));
+        return treinos.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }

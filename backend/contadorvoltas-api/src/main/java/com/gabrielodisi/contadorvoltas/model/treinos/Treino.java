@@ -31,7 +31,12 @@ abstract public class Treino {
     protected int distanciaCorridaMetros = 0;
 
     public abstract void registrarVolta(long tempoVolta);
-    public abstract void finalizarTreino();
+
+    public void finalizarTreino() {
+        if (this.getEstado() != EstadoTreino.CONCLUIDO) {
+            this.setEstado(EstadoTreino.INCOMPLETO);
+        }
+    }
 
     public long getTempoTotalMS() {
         return getVoltas().stream()
