@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "utils/TrainingPool.h"
+#include "training/TrainingPool.h"
 
 bool addTraining(Pool* p, Training t) {
     if (p == nullptr || p->amount >= MAX_TRAINING_SIMULTANEOUS) {
@@ -29,7 +29,7 @@ void removeTraining(Pool* p, int trainingId) {
     }
 }
 
-void initializePool(Pool* p, Training t) {
+void initializePool(Pool* p) {
     p->amount = 0;
     for (int i = 0; i < MAX_TRAINING_SIMULTANEOUS; i++) {
         p->pool[0].type = FREE_SLOT;

@@ -6,16 +6,16 @@
 
 #define MAX_TRAINING_SIMULTANEOUS 4
 
-typedef struct pool {
+typedef struct Pool {
     int      amount;
     Training pool[MAX_TRAINING_SIMULTANEOUS];
 } Pool;
 
 
 bool addTraining(Pool* p, Training t);
-void removeTraining(Pool* p, Training t);
+void removeTraining(Pool* p, int trainingId);
 
-void initializePool(Pool* p, Training t);
+void initializePool(Pool* p);
 
 
 #endif

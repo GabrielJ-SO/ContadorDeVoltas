@@ -6,8 +6,13 @@
 #include "tasks/networkClient_task.h"
 #include "tasks/networkServer_task.h"
 
+#include "training/TrainingPool.h"
+#include "global.h"
+
 void setup() {
     Serial.begin(115200);
+
+    initializePool(&trainingPool);
 
     vStartRFIDTask();
     vStartDisplayTask();

@@ -1,13 +1,16 @@
 #ifndef TRAINING_H
 #define TRAINING_H
 
-#include <iostream>
+#include "pch.h"
 
 #include "FreePractice.h"
 #include "RunningWorkout.h"
 #include "IntervalTraining.h"
+#include "TrainingPool.h"
+#include "global.h"
 
 struct Training;
+
 
 typedef enum {
     FREE_SLOT,
@@ -41,9 +44,9 @@ struct Training
     
     union
     {
-        FreePractice       livre;
-        RunningWorkout     corrida;
-        IntervalTraining   intervalado;
+        FreePractice       free;
+        RunningWorkout     workout;
+        IntervalTraining   interval;
     } dataTraining;
 
 };

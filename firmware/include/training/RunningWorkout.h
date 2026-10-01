@@ -3,7 +3,7 @@
 
 typedef struct RunningWorkout
 {
-    int NumberOfLaps;
+    int numberOfLaps;
 } RunningWorkout;
 
 bool startRunningWorkout(long trainingId, long atheleteTag, int numberOfLaps);

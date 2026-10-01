@@ -16,5 +16,20 @@ TrainingOP fpOP = { fpLapCounting, fpDisplay, fpSendLapToAPI };
 
 
 bool startFreePractice(long trainingId, long athleteTag) {
-    return true;
+    Training t;
+
+    t.type                               = FREE_PRACTICE;
+    t.state                              =   NON_STARTED;
+    t.trainingId                         =    trainingId;
+    t.athleteTag                         =    athleteTag;
+    t.lapsCompleted                      =             0;
+    t.startTimeMS                        =             0;
+    t.lastLapTimeMS                      =             0;
+    t.currentTimeMS                      =             0;
+    t.totalTimeSumMS                     =             0;
+
+    if (addTraining(&trainingPool, t)) 
+        return true;
+        
+    return false;
 }

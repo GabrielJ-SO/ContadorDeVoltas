@@ -12,9 +12,25 @@ void rwSendLapToAPI(Training* t) {
 
 }
 
-TrainingOP runningWorkoutOP = { rwLapCounting, rwDisplay,rwSendLapToAPI };
+TrainingOP rwOP = { rwLapCounting, rwDisplay,rwSendLapToAPI };
 
 
-bool startRunningWorkout(long trainingId, long atheleteTag, int numberOfLaps) {
-    return true;
+bool startRunningWorkout(long trainingId, long athleteTag, int numberOfLaps) {
+    Training t;
+
+    t.type                              = RUNNING_WORKOUT;
+    t.state                             =     NON_STARTED;
+    t.trainingId                        =      trainingId;
+    t.athleteTag                        =      athleteTag;
+    t.lapsCompleted                     =               0;
+    t.startTimeMS                       =               0;
+    t.lastLapTimeMS                     =               0;
+    t.currentTimeMS                     =               0;
+    t.totalTimeSumMS                    =               0;
+    t.dataTraining.workout.numberOfLaps =    numberOfLaps;
+    
+    if (addTraining(&trainingPool, t)) 
+        return true;
+        
+    return false;
 }
