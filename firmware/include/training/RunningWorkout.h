@@ -1,3 +1,4 @@
+#pragma once
 #ifndef RUNNINGWORKOUT_H
 #define RUNNINGWORKOUT_H
 

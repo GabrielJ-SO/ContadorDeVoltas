@@ -1,4 +1,6 @@
 #include "training/Training.h"
+#include "training/TrainingPool.h"
+#include "global.h"
 
 bool rwLapCounting (Training* t) {
     return true;

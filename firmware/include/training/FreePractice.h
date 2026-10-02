@@ -1,3 +1,4 @@
+#pragma once
 #ifndef FREEPRACTICE_H
 #define FREEPRACTICE_H
 

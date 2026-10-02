@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TRAINING_H
 #define TRAINING_H
 
@@ -6,8 +7,6 @@
 #include "FreePractice.h"
 #include "RunningWorkout.h"
 #include "IntervalTraining.h"
-#include "TrainingPool.h"
-#include "global.h"
 
 struct Training;
 

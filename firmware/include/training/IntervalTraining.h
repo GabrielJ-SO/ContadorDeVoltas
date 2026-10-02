@@ -1,3 +1,4 @@
+#pragma once
 #ifndef INTERVALTRAINING_H
 #define INTERVALTRAINING_H
 
