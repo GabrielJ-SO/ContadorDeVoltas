@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "tasks/rfid_task.h"
+#include "tasks/lapCount_task.h"
 
 static TaskHandle_t xRFIDTaskHandle = NULL;
 
