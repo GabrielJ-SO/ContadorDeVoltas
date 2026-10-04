@@ -25,7 +25,7 @@ typedef enum {
 } TrainingState;
 
 typedef struct {
-    bool  (*lapCounting)(Training* t);
+    void  (*lapCounting)(Training* t);
     void  (*display)(Training* t, char* buffer, size_t tamanhoBuffer);
     void  (*sendLapToAPI)(Training* t);
 } TrainingOP;
@@ -39,7 +39,7 @@ struct Training
 
     int           lapsCompleted;
     long          trainingId, athleteTag;
-    unsigned long startTimeMS, lastLapTimeMS, currentTimeMS, totalTimeSumMS;
+    unsigned long startTimeMS, lastLapTimeMS, currentTimeMS, lapsTimeSumMS;
     
     union
     {
@@ -49,5 +49,11 @@ struct Training
     } dataTraining;
 
 };
+
+
+void timeFormat(unsigned long tempoMS, char* buffer, size_t bufferSize);
+void lapTimeFormat(unsigned long tempoMS, char* buffer, size_t bufferSize);
+
+void completeTraining(Training* t);
 
 #endif
