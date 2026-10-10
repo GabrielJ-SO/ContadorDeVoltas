@@ -98,6 +98,8 @@ bool startIntervalTraining(long trainingId, long athleteTag, unsigned long restT
     t.dataTraining.interval.restTimeMS        =        restTimeMS;
     t.dataTraining.interval.numberOfIntervals =         intervals;
     t.dataTraining.interval.numberOfLaps      =      numberOfLaps;
+    t.dataTraining.interval.interval          =             false;
+    t.dataTraining.interval.intervalCompleted =             false;
 
     if (addTraining(&trainingPool, t)) 
         return true;

@@ -14,7 +14,10 @@ void vDisplayTask(void *pvParameters)
     for ( ; ; )
     {
 
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
+
+    
 }
 
 

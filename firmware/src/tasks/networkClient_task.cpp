@@ -24,15 +24,16 @@ void vNetworkClientTask(void* pvParameters)
 
 
         }
-    }
 
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
 
 }
 
 
 void vStartNetworkClientTask() {
     xLapQueue = xQueueCreate(20, sizeof(Lap));
-    xTaskCreatePinnedToCore(vNetworkClientTask, "NetClient_Task", 1024, NULL, 2, &xNetworkClientTaskHandle, 0);
+    xTaskCreatePinnedToCore(vNetworkClientTask, "NetClient_Task", 1024, NULL, 3, &xNetworkClientTaskHandle, 0);
 }
 
 

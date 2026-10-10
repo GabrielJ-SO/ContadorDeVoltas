@@ -11,7 +11,8 @@ void vRFIDTask(void *pvParemeters)
 
     for ( ; ; )
     {
-
+        
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 
 }

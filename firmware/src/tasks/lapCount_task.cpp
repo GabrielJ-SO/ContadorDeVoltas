@@ -16,6 +16,8 @@ void vLapCountTask(void* pvParemeters)
         {
 
         }
+        
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 
 }
