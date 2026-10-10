@@ -48,8 +48,6 @@ void vNetworkServerTask(void* pvParameters)
         }
     }
 }
-
-
 void vStartNetworkServerTask() { xTaskCreatePinnedToCore(vNetworkServerTask, "NetServer_Task", 4096, NULL, 1, &xNetworkServerTaskHandle, 0); }
 
 
@@ -58,7 +56,7 @@ bool startWiFiConnection() {
     WiFi.setAutoReconnect(true);
     WiFi.persistent(false);
 
-    if (!WiFi.config(local_IP, gateway, subnet))
+    if (!WiFi.config(local_IP, gateway, subnet, gateway))
         Serial.println("Failed to configure a static IP");
 
     WiFi.begin(ssid, pass);
@@ -67,6 +65,8 @@ bool startWiFiConnection() {
     while (WiFi.status() != WL_CONNECTED && millis() - start < 15000) {
         vTaskDelay(pdMS_TO_TICKS(250));
     } 
+
+    return WiFi.status() == WL_CONNECTED;
 }
 
 void setTrainingRequests() {

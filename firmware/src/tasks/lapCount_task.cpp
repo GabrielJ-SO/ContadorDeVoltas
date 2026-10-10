@@ -21,7 +21,6 @@ void vLapCountTask(void* pvParemeters)
     }
 
 }
-
 void vStartLapCountTask() {
     xRfidTagQueue = xQueueCreate(20, sizeof(long));
     xTaskCreatePinnedToCore(vLapCountTask, "LapCount_Task", 1024, NULL, 3, &xLapCountTaskHandle, 1); 

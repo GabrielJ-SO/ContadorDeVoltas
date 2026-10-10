@@ -19,6 +19,4 @@ void vDisplayTask(void *pvParameters)
 
     
 }
-
-
 void vStartDisplayTask() { xTaskCreatePinnedToCore(vDisplayTask, "DISPLAY_TASK", 512, NULL, 3, &xDisplayTaskHandle, 1); }
