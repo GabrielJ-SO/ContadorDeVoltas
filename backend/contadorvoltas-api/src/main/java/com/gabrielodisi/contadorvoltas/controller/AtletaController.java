@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -19,6 +20,13 @@ public class AtletaController {
 
     @PostMapping
     public Atleta salvar(@RequestBody Atleta atleta){ return service.salvar(atleta); }
+
+    @PatchMapping("/tag/update/{id}")
+    public ResponseEntity<Atleta> atualizarTag(@PathVariable("id") long id, @RequestBody Map<String, String> payload) {
+        Atleta atleta = service.atualizarTag(id, payload.get("tag"));
+        return ResponseEntity.ok(atleta);
+    }
+
 
     @DeleteMapping("/{id}")
     public void deletarAtleta(@PathVariable Long id){ service.deletar(id); }

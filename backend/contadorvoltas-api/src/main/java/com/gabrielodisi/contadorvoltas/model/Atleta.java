@@ -5,6 +5,7 @@ import com.gabrielodisi.contadorvoltas.model.treinos.Treino;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 public class Atleta extends Pessoa {
 
+    @Setter
     @Size(min = 24, max = 24)
     private String tagRFID;
 

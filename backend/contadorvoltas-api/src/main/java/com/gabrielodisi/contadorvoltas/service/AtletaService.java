@@ -7,6 +7,7 @@ import com.gabrielodisi.contadorvoltas.repository.TreinoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
 import java.util.List;
@@ -23,6 +24,16 @@ public class AtletaService {
     public Optional<Atleta> buscarPorId(Long id) { return repository.findById(id); }
 
     public Atleta salvar(Atleta atleta) { return repository.save(atleta); }
+
+    @Transactional
+    public Atleta atualizarTag(Long id, String tag) {
+        Atleta atleta = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Atleta não encontrado"));
+
+        atleta.setTagRFID(tag);
+
+        return repository.save(atleta);
+    }
 
     public void deletar(Long id) {
         if (repository.existsById(id)) {
