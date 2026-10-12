@@ -6,10 +6,14 @@ import jakarta.persistence.Entity;
 public class TreinoLivre extends Treino {
 
     @Override
-    public void registrarVolta(long tempoVolta) {
+    public boolean registrarVolta(long tempoVolta) {
+        if (super.getEstado() != EstadoTreino.EM_ANDAMENTO) { return false;}
+
         int numeroVolta = getVoltas().size() + 1;
         getVoltas().add(new Volta(numeroVolta, tempoVolta));
         super.distanciaCorridaMetros += Volta.DISTANCIA_VOLTA_METROS;
+
+        return true;
     }
 
     @Override

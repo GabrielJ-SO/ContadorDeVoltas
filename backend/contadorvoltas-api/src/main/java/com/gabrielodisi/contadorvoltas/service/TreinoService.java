@@ -1,6 +1,5 @@
 package com.gabrielodisi.contadorvoltas.service;
 
-import com.gabrielodisi.contadorvoltas.model.treinos.EstadoTreino;
 import com.gabrielodisi.contadorvoltas.model.treinos.Treino;
 import com.gabrielodisi.contadorvoltas.model.treinos.Volta;
 import com.gabrielodisi.contadorvoltas.repository.TreinoRepository;
@@ -22,16 +21,17 @@ public class TreinoService {
 
     public Optional<Treino> buscarPorId(Long id) { return repository.findById(id); }
 
-
+    @Transactional
     public void iniciarTreino(long id) {
         Treino treino = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Treino não encontrado."));
 
-        if (treino.getEstado() == EstadoTreino.NAO_INICIADO) {
-            treino.setEstado(EstadoTreino.EM_ANDAMENTO);
+        if (!treino.iniciarTreino()) {
+            throw new RuntimeException("Não foi possível iniciar o Treino.");
         }
     }
 
+    @Transactional
     public void finalizarTreino(long id) {
         Treino treino = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Treino não encontrado."));
@@ -60,7 +60,9 @@ public class TreinoService {
         Treino treino = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Treino não encontrado para registrar volta."));
 
-        treino.registrarVolta(tempoVolta);
+        if (!treino.registrarVolta(tempoVolta)) {
+            throw new RuntimeException("Erro ao registrar volta.");
+        }
     }
 
 }

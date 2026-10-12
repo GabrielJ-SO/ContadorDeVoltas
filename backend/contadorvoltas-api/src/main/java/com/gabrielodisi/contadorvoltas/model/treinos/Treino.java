@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ abstract public class Treino {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection (fetch = FetchType.EAGER)
     @CollectionTable(name = "treino_voltas", joinColumns = @JoinColumn(name = "treino_id"))
     private List<Volta> voltas = new ArrayList<>();
 
@@ -26,11 +27,21 @@ abstract public class Treino {
     Atleta atleta;
 
     private String nome;
-    private LocalDate data = LocalDate.now();
+    private LocalDateTime data_hora;
     private EstadoTreino estado = EstadoTreino.NAO_INICIADO;
     protected int distanciaCorridaMetros = 0;
 
-    public abstract void registrarVolta(long tempoVolta);
+    public abstract boolean registrarVolta(long tempoVolta);
+
+    public boolean iniciarTreino() {
+        if (this.estado == EstadoTreino.NAO_INICIADO) {
+            this.estado = EstadoTreino.EM_ANDAMENTO;
+            this.data_hora = LocalDateTime.now();
+            return true;
+        }
+
+        return false;
+    }
 
     public void finalizarTreino() {
         if (this.getEstado() != EstadoTreino.CONCLUIDO) {

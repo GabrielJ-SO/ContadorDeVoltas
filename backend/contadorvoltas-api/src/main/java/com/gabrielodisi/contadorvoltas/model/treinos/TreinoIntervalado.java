@@ -38,7 +38,9 @@ public class TreinoIntervalado extends Treino {
     }
 
     @Override
-    public void registrarVolta(long tempoVolta) {
+    public boolean registrarVolta(long tempoVolta) {
+        if (super.getEstado() != EstadoTreino.EM_ANDAMENTO) { return false;}
+
         if (!isConcluido()) {
             registrarVoltaTiros(tempoVolta);
 
@@ -48,6 +50,8 @@ public class TreinoIntervalado extends Treino {
         }
 
         if (isConcluido()) { concluirTreino(); }
+
+        return true;
     }
 
 
