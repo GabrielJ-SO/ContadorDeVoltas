@@ -46,6 +46,8 @@ void vNetworkServerTask(void* pvParameters)
         } else {
             vTaskDelay(pdMS_TO_TICKS(1000));
         }
+
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 void vStartNetworkServerTask() { xTaskCreatePinnedToCore(vNetworkServerTask, "NetServer_Task", 4096, NULL, 1, &xNetworkServerTaskHandle, 0); }
@@ -127,8 +129,19 @@ bool intervalTrainingRequest(AsyncWebServerRequest *request) {
     return false;
 }
 
-
+// http://192.168.1.150/start/runningWorkout?id=trainingID&tag=atheleteTag&numLap=numberOfLaps
 bool runningWorkoutRequest(AsyncWebServerRequest *request) {
-    // TODO
+    if (request->hasParam("id") && request->hasParam("tag") && request->hasParam("numLap"))
+    {
+        long id = request->getParam("id")->value().toInt();
+        long tag = request->getParam("tag")->value().toInt();
+        int numLap = request->getParam("numLap")->value().toInt();
+
+        if (startRunningWorkout(id, tag, numLap))
+            return true;
+        else
+            return false;
+    }
+        
     return false;
 }
