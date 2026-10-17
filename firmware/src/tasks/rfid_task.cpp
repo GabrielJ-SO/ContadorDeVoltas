@@ -12,10 +12,12 @@ void vRFIDTask(void *pvParemeters)
     for ( ; ; )
     {
         
+        Serial.println("RFID (CORE 0)");
+
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 
 }
 
 
-void vStartRFIDTask() { xTaskCreatePinnedToCore(vRFIDTask, "RFID_TASK", 512, NULL, 5, &xRFIDTaskHandle, 0); }
+void vStartRFIDTask() { xTaskCreatePinnedToCore(vRFIDTask, "RFID_TASK", 2048, NULL, 5, &xRFIDTaskHandle, 0); }

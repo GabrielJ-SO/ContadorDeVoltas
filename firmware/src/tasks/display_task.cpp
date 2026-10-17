@@ -13,10 +13,10 @@ void vDisplayTask(void *pvParameters)
 
     for ( ; ; )
     {
-
+        Serial.println("DISPLAY (CORE 1)");
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 
     
 }
-void vStartDisplayTask() { xTaskCreatePinnedToCore(vDisplayTask, "DISPLAY_TASK", 512, NULL, 3, &xDisplayTaskHandle, 1); }
+void vStartDisplayTask() { xTaskCreatePinnedToCore(vDisplayTask, "DISPLAY_TASK", 4096, NULL, 3, &xDisplayTaskHandle, 1); }

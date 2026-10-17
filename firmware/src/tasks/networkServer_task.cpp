@@ -9,17 +9,16 @@
 
 static TaskHandle_t xNetworkServerTaskHandle = NULL;
 
-// default IP: 192.168.4.1
+
 AsyncWebServer server(80);
 
-const char ssid[] = "name";
-const char pass[] = "password";
+const char ssid[] = "";
+const char pass[] = "";
 
 IPAddress local_IP(192, 168, 1, 150);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 255, 0);
 
-bool startWiFiConnection();
 void setTrainingRequests();
 
 bool freePracticeRequest(AsyncWebServerRequest *request);
@@ -29,47 +28,21 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request);
 void vNetworkServerTask(void* pvParameters) 
 {
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
-
-    if (startWiFiConnection())
-        Serial.println(WiFi.localIP());
-    else
-        Serial.println("WiFi not connected; attempting to establish connection");
     setTrainingRequests();
+    server.begin();
     
     server.begin();
 
     for ( ; ; )
-    {
-        if (WiFi.status() != WL_CONNECTED) {
-            WiFi.reconnect();
-            vTaskDelay(pdMS_TO_TICKS(5000));
-        } else {
-            vTaskDelay(pdMS_TO_TICKS(1000));
-        }
+    {   
+        Serial.println("SERVER (CORE 0)");
 
+        Serial.printf("Wifi Status: %d\n", WiFi.status());
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
-void vStartNetworkServerTask() { xTaskCreatePinnedToCore(vNetworkServerTask, "NetServer_Task", 4096, NULL, 1, &xNetworkServerTaskHandle, 0); }
+void vStartNetworkServerTask() { xTaskCreatePinnedToCore(vNetworkServerTask, "NetServer_Task", 8192, NULL, 1, &xNetworkServerTaskHandle, 0); }
 
-
-bool startWiFiConnection() {
-    WiFi.mode(WIFI_STA);
-    WiFi.setAutoReconnect(true);
-    WiFi.persistent(false);
-
-    if (!WiFi.config(local_IP, gateway, subnet, gateway))
-        Serial.println("Failed to configure a static IP");
-
-    WiFi.begin(ssid, pass);
-
-    unsigned long start = millis();
-    while (WiFi.status() != WL_CONNECTED && millis() - start < 15000) {
-        vTaskDelay(pdMS_TO_TICKS(250));
-    } 
-
-    return WiFi.status() == WL_CONNECTED;
-}
 
 void setTrainingRequests() {
 
@@ -129,7 +102,6 @@ bool intervalTrainingRequest(AsyncWebServerRequest *request) {
     return false;
 }
 
-// http://192.168.1.150/start/runningWorkout?id=trainingID&tag=atheleteTag&numLap=numberOfLaps
 bool runningWorkoutRequest(AsyncWebServerRequest *request) {
     if (request->hasParam("id") && request->hasParam("tag") && request->hasParam("numLap"))
     {
@@ -144,4 +116,17 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request) {
     }
         
     return false;
+}
+
+void initWiFi() {
+
+    WiFi.mode(WIFI_STA);
+    WiFi.setSleep(false);
+    WiFi.setAutoReconnect(true);   // sem reconnect() manual
+    WiFi.persistent(false);
+
+    if (!WiFi.config(local_IP, gateway, subnet, gateway))
+        Serial.println("Failed to configure a static IP");
+
+    WiFi.begin(ssid, pass);        // não bloqueia
 }

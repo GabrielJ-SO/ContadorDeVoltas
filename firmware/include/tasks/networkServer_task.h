@@ -4,4 +4,6 @@
 
 void vStartNetworkServerTask();
 
+void initWiFi();
+
 #endif

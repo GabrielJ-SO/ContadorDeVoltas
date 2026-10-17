@@ -7,15 +7,19 @@ bool addTraining(Pool* p, Training t) {
         return false;
     }
 
-    for (int i = 0; i < MAX_TRAINING_SIMULTANEOUS; i++) {
-        if (p->pool[i].type == FREE_SLOT) {
-            p->pool[i] = t;
-            p->amount++;
-            return true;
+    p->pool[p->amount] = t;
+    p->amount++;
+    return true;
+}
+
+void reorderPool(Pool* p) {
+    for (int i = 1; i < p->amount; i++) {
+        if (p->pool[i-1].type == FREE_SLOT && p->pool[i].type != FREE_SLOT) {
+            p->pool[i-1]    = p->pool[i];
+            p->pool[i].type = FREE_SLOT;
         }
     }
 
-    return false;
 }
 
 void removeTraining(Pool* p, int trainingId) {
@@ -23,6 +27,7 @@ void removeTraining(Pool* p, int trainingId) {
     for (int i = 0; i < MAX_TRAINING_SIMULTANEOUS; i++) {
         if (p->pool[i].trainingId == trainingId) {
             p->pool[i].type = FREE_SLOT;
+            reorderPool(p);
             p->amount--;
             return;
         }
@@ -32,6 +37,6 @@ void removeTraining(Pool* p, int trainingId) {
 void initializePool(Pool* p) {
     p->amount = 0;
     for (int i = 0; i < MAX_TRAINING_SIMULTANEOUS; i++) {
-        p->pool[0].type = FREE_SLOT;
+        p->pool[i].type = FREE_SLOT;
     }
 }

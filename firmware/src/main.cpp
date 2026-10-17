@@ -12,13 +12,16 @@
 void setup() {
     Serial.begin(115200);
 
+    initWiFi();
     initializePool(&trainingPool);
 
     vStartRFIDTask();
     vStartDisplayTask();
     vStartLapCountTask();
-    vStartNetworkClientTask();
     vStartNetworkServerTask();
+    vStartNetworkClientTask();
+    
+    Serial.println("Running...");
 
     vTaskStartScheduler();
 }
