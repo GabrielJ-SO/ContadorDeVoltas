@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "global.h"
 
 #include "tasks/networkServer_task.h"
 #include "WiFi.h"       
@@ -35,9 +36,9 @@ void vNetworkServerTask(void* pvParameters)
 
     for ( ; ; )
     {   
-        Serial.println("SERVER (CORE 0)");
+        //Serial.println("SERVER (CORE 0)");
 
-        Serial.printf("Wifi Status: %d\n", WiFi.status());
+        //Serial.printf("Wifi Status: %d\n", WiFi.status());
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
@@ -84,10 +85,19 @@ bool freePracticeRequest(AsyncWebServerRequest *request) {
         long trainingID = request->getParam("id")->value().toInt();
         long atheleteTag = request->getParam("tag")->value().toInt();
 
-        if (startFreePractice(trainingID, atheleteTag))
-            return true;
-        else
-            return false;
+        if (xSemaphoreTake(xTrainingPoolMutex, portMAX_DELAY)  == pdTRUE)
+        {
+            if (startFreePractice(trainingID, atheleteTag)) {
+                xSemaphoreGive(xTrainingPoolMutex);
+                return true;
+            }
+            else {
+                xSemaphoreGive(xTrainingPoolMutex);
+                return false;
+            }
+                
+        }
+        
     }
     else 
     {
@@ -109,10 +119,17 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request) {
         long tag = request->getParam("tag")->value().toInt();
         int numLap = request->getParam("numLap")->value().toInt();
 
-        if (startRunningWorkout(id, tag, numLap))
-            return true;
-        else
-            return false;
+        if (xSemaphoreTake(xTrainingPoolMutex, portMAX_DELAY)  == pdTRUE)
+        {
+            if (startRunningWorkout(id, tag, numLap)) {
+                xSemaphoreGive(xTrainingPoolMutex);
+                return true;
+            }
+            else {
+                xSemaphoreGive(xTrainingPoolMutex);
+                return false;
+            }
+        }
     }
         
     return false;

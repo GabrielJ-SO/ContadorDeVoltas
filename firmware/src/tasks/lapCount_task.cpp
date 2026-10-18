@@ -13,8 +13,8 @@ void vLapCountTask(void* pvParemeters)
     for ( ; ; )
     {   
 
-        Serial.println("LAP COUNT (CORE 1)");
-        if (xQueueReceive(xRfidTagQueue, &tag, pdMS_TO_TICKS(500)))
+        //Serial.println("LAP COUNT (CORE 1)");
+        if (xQueueReceive(xRfidTagQueue, &tag, portMAX_DELAY))
         {
 
         }

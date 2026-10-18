@@ -32,7 +32,7 @@ void vNetworkClientTask(void* pvParameters)
     for ( ; ; )
     {   
 
-        Serial.println("CLIENT (CORE 0)");
+        //Serial.println("CLIENT (CORE 0)");
         xQueueReceive(xLapQueue, &lap, portMAX_DELAY);
 
         unsigned long backoff = RETRY_MIN_MS;
