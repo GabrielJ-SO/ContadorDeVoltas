@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TreinoRepository extends JpaRepository<Treino, Long> {
 
@@ -25,6 +26,11 @@ public interface TreinoRepository extends JpaRepository<Treino, Long> {
                     "INNER JOIN treino t ON (t.id = tv.treino_id) " +
                     "where :id = tv.treino_id", nativeQuery = true)
     List<Volta> listarVoltas(@Param("id") long id);
+
+    @Query(value = "SELECT t" +
+                    " FROM Treino t" +
+                    " WHERE t.estado = 2 AND t.atleta.id = :id")
+    Treino verificarTreinoEmAndamento(@Param("id") Long id);
 
 
 }

@@ -42,9 +42,9 @@ public class TreinoController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/iniciar/{id}")
-    public ResponseEntity<Void> iniciarTreino(@PathVariable Long id) {
-        service.iniciarTreino(id);
+    @PostMapping("/iniciar/{atleta_id}/{id}")
+    public ResponseEntity<Void> iniciarTreino(@PathVariable Long id,  @PathVariable Long atleta_id) {
+        service.iniciarTreino(id, atleta_id);
         return ResponseEntity.ok().build();
     }
 

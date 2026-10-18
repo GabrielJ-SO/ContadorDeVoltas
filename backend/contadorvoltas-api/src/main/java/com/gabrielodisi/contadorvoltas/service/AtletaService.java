@@ -25,7 +25,6 @@ public class AtletaService {
 
     public Atleta salvar(Atleta atleta) { return repository.save(atleta); }
 
-    @Transactional
     public Atleta atualizarTag(Long id, String tag) {
         Atleta atleta = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Atleta não encontrado"));
