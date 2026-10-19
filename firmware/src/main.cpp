@@ -14,23 +14,21 @@ void setup() {
     Serial.begin(115200);
     // Serial2.begin(115200, SERIAL_8N1, RFID_RX_PIN, RFID_TX_PIN);
     initializePool(&trainingPool);
-    
+    xTrainingPoolMutex = xSemaphoreCreateMutex();
+   
     initWiFi();
 
-    xTrainingPoolMutex = xSemaphoreCreateMutex();
-    
+    vStartNetworkServerTask();
     vStartRFIDTask();
     vStartDisplayTask();
     vStartLapCountTask();
-    vStartNetworkServerTask();
     vStartNetworkClientTask();
     
     Serial.println("Running...");
 
-    vTaskStartScheduler();
 }
 
 void loop() {
-  
+    vTaskDelay(portMAX_DELAY);
 }
 

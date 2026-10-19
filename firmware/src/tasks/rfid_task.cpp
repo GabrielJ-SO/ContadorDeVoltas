@@ -20,4 +20,4 @@ void vRFIDTask(void *pvParemeters)
 }
 
 
-void vStartRFIDTask() { xTaskCreatePinnedToCore(vRFIDTask, "RFID_TASK", 2048, NULL, 5, &xRFIDTaskHandle, 0); }
+void vStartRFIDTask() { xTaskCreatePinnedToCore(vRFIDTask, "RFID_TASK", 4096, NULL, 5, &xRFIDTaskHandle, 0); }

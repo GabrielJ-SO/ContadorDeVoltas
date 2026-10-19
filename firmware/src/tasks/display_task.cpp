@@ -8,6 +8,8 @@
 
 static TaskHandle_t xDisplayTaskHandle = NULL;
 
+void drawHeader();
+
 
 void vDisplayTask(void *pvParameters)
 {
@@ -18,24 +20,37 @@ void vDisplayTask(void *pvParameters)
     for ( ; ; )
     {
         // Serial.println("DISPLAY (CORE 1)");
-        snprintf(trainingBuffer, sizeof(trainingBuffer), "Tmp Geral|vlt|Tmp vlt|rep");
-        Serial.println(trainingBuffer);
-        for (int i = 0; i < trainingPool.amount; i++)
-        {   
-            if (xSemaphoreTake(xTrainingPoolMutex, portMAX_DELAY) == pdTRUE)
+   
+            drawHeader();
+            for (int i = 0; i < MAX_TRAINING_SIMULTANEOUS; i++)
             {   
-                training = trainingPool.pool[i];
-                xSemaphoreGive(xTrainingPoolMutex);
-            }
+                if (xSemaphoreTake(xTrainingPoolMutex, 10) == pdTRUE)
+                {   
 
-            training.ops.display(&trainingPool.pool[i], trainingBuffer, sizeof(trainingBuffer));
-            Serial.println(trainingBuffer);
-        } 
-        
-        
+                    if (trainingPool.items[i].type != FREE_SLOT)
+                    {
+                        training = trainingPool.items[i];
+                        xSemaphoreGive(xTrainingPoolMutex);
+                        training.ops.display(&training, trainingBuffer, sizeof(trainingBuffer));
+                        Serial.println(trainingBuffer);
+                    }
+                    else {
+                        xSemaphoreGive(xTrainingPoolMutex);
+                    }
+            
+                }
+                
+            }
+     
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 
     
 }
-void vStartDisplayTask() { xTaskCreatePinnedToCore(vDisplayTask, "DISPLAY_TASK", 4096, NULL, 3, &xDisplayTaskHandle, 1); }
+void vStartDisplayTask() { xTaskCreatePinnedToCore(vDisplayTask, "DISPLAY_TASK", 8192, NULL, 2, &xDisplayTaskHandle, 1); }
+
+void drawHeader(){
+    char headerBuffer[50];
+    snprintf(headerBuffer, sizeof(headerBuffer), "Tmp Geral|vlt|Tmp vlt|rep");
+    Serial.println(headerBuffer);
+}

@@ -13,8 +13,8 @@ static TaskHandle_t xNetworkServerTaskHandle = NULL;
 
 AsyncWebServer server(80);
 
-const char ssid[] = "";
-const char pass[] = "";
+const char ssid[] = "Odisi";
+const char pass[] = "odisi1958";
 
 IPAddress local_IP(192, 168, 1, 150);
 IPAddress gateway(192, 168, 1, 1);
@@ -31,8 +31,6 @@ void vNetworkServerTask(void* pvParameters)
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
     setTrainingRequests();
     server.begin();
-    
-    server.begin();
 
     for ( ; ; )
     {   
@@ -42,7 +40,7 @@ void vNetworkServerTask(void* pvParameters)
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
-void vStartNetworkServerTask() { xTaskCreatePinnedToCore(vNetworkServerTask, "NetServer_Task", 8192, NULL, 1, &xNetworkServerTaskHandle, 0); }
+void vStartNetworkServerTask() { xTaskCreatePinnedToCore(vNetworkServerTask, "NetServer_Task", 8192, NULL, 2, &xNetworkServerTaskHandle, 0); }
 
 
 void setTrainingRequests() {
@@ -85,7 +83,7 @@ bool freePracticeRequest(AsyncWebServerRequest *request) {
         long trainingID = request->getParam("id")->value().toInt();
         long atheleteTag = request->getParam("tag")->value().toInt();
 
-        if (xSemaphoreTake(xTrainingPoolMutex, portMAX_DELAY)  == pdTRUE)
+        if (xSemaphoreTake(xTrainingPoolMutex, pdMS_TO_TICKS(500))  == pdTRUE)
         {
             if (startFreePractice(trainingID, atheleteTag)) {
                 xSemaphoreGive(xTrainingPoolMutex);
@@ -99,11 +97,8 @@ bool freePracticeRequest(AsyncWebServerRequest *request) {
         }
         
     }
-    else 
-    {
-        return false;
-    }
-
+   
+    return false;
 }
 
 
@@ -119,7 +114,7 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request) {
         long tag = request->getParam("tag")->value().toInt();
         int numLap = request->getParam("numLap")->value().toInt();
 
-        if (xSemaphoreTake(xTrainingPoolMutex, portMAX_DELAY)  == pdTRUE)
+        if (xSemaphoreTake(xTrainingPoolMutex, pdMS_TO_TICKS(500))  == pdTRUE)
         {
             if (startRunningWorkout(id, tag, numLap)) {
                 xSemaphoreGive(xTrainingPoolMutex);
@@ -130,6 +125,7 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request) {
                 return false;
             }
         }
+        
     }
         
     return false;
@@ -139,11 +135,11 @@ void initWiFi() {
 
     WiFi.mode(WIFI_STA);
     WiFi.setSleep(false);
-    WiFi.setAutoReconnect(true);   // sem reconnect() manual
+    WiFi.setAutoReconnect(true);
     WiFi.persistent(false);
 
     if (!WiFi.config(local_IP, gateway, subnet, gateway))
         Serial.println("Failed to configure a static IP");
 
-    WiFi.begin(ssid, pass);        // não bloqueia
+    WiFi.begin(ssid, pass);   
 }

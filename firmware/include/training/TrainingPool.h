@@ -7,8 +7,8 @@
 #define MAX_TRAINING_SIMULTANEOUS 4
 
 typedef struct Pool {
-    int      amount;
-    Training pool[MAX_TRAINING_SIMULTANEOUS];
+    int      size;
+    Training items[MAX_TRAINING_SIMULTANEOUS];
 } Pool;
 
 

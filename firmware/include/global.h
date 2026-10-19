@@ -10,7 +10,6 @@
 
 
 inline Pool trainingPool;
-
 inline SemaphoreHandle_t xTrainingPoolMutex;
 
 #endif

@@ -25,7 +25,7 @@ void vLapCountTask(void* pvParemeters)
 }
 void vStartLapCountTask() {
     xRfidTagQueue = xQueueCreate(20, sizeof(long));
-    xTaskCreatePinnedToCore(vLapCountTask, "LapCount_Task", 2048, NULL, 3, &xLapCountTaskHandle, 1); 
+    xTaskCreatePinnedToCore(vLapCountTask, "LapCount_Task", 4096, NULL, 3, &xLapCountTaskHandle, 1); 
 }
 
 bool sendTagToRfidQueue(long tag, unsigned long awaitMS) {
