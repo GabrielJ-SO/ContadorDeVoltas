@@ -83,19 +83,7 @@ bool freePracticeRequest(AsyncWebServerRequest *request) {
         long trainingID = request->getParam("id")->value().toInt();
         long atheleteTag = request->getParam("tag")->value().toInt();
 
-        if (xSemaphoreTake(xTrainingPoolMutex, pdMS_TO_TICKS(500))  == pdTRUE)
-        {
-            if (startFreePractice(trainingID, atheleteTag)) {
-                xSemaphoreGive(xTrainingPoolMutex);
-                return true;
-            }
-            else {
-                xSemaphoreGive(xTrainingPoolMutex);
-                return false;
-            }
-                
-        }
-        
+        if (startFreePractice(trainingID, atheleteTag)) return true;
     }
    
     return false;
@@ -114,18 +102,7 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request) {
         long tag = request->getParam("tag")->value().toInt();
         int numLap = request->getParam("numLap")->value().toInt();
 
-        if (xSemaphoreTake(xTrainingPoolMutex, pdMS_TO_TICKS(500))  == pdTRUE)
-        {
-            if (startRunningWorkout(id, tag, numLap)) {
-                xSemaphoreGive(xTrainingPoolMutex);
-                return true;
-            }
-            else {
-                xSemaphoreGive(xTrainingPoolMutex);
-                return false;
-            }
-        }
-        
+        if (startRunningWorkout(id, tag, numLap))  return true; 
     }
         
     return false;

@@ -90,6 +90,7 @@ bool startIntervalTraining(long trainingId, long athleteTag, unsigned long restT
     t.state                                   =       NON_STARTED;
     t.trainingId                              =        trainingId;
     t.athleteTag                              =        athleteTag;
+    t.ops                                     =              itOP;
     t.lapsCompleted                           =                 0;
     t.startTimeMS                             =                 0;
     t.lastLapTimeMS                           =                 0;

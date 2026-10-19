@@ -14,33 +14,15 @@ void drawHeader();
 void vDisplayTask(void *pvParameters)
 {
     char trainingBuffer[50];
-    Training training;
-
 
     for ( ; ; )
     {
-        // Serial.println("DISPLAY (CORE 1)");
-   
-            drawHeader();
-            for (int i = 0; i < MAX_TRAINING_SIMULTANEOUS; i++)
-            {   
-                if (xSemaphoreTake(xTrainingPoolMutex, 10) == pdTRUE)
-                {   
-
-                    if (trainingPool.items[i].type != FREE_SLOT)
-                    {
-                        training = trainingPool.items[i];
-                        xSemaphoreGive(xTrainingPoolMutex);
-                        training.ops.display(&training, trainingBuffer, sizeof(trainingBuffer));
-                        Serial.println(trainingBuffer);
-                    }
-                    else {
-                        xSemaphoreGive(xTrainingPoolMutex);
-                    }
-            
-                }
-                
-            }
+        drawHeader(); 
+        for (int i = 0; i < trainingPool.size; i++)
+        {
+            trainingPool.items[i].ops.display(&trainingPool.items[i], trainingBuffer, sizeof(trainingBuffer));
+            Serial.println(trainingBuffer);
+        }
      
         vTaskDelay(pdMS_TO_TICKS(10));
     }

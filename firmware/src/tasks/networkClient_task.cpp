@@ -37,7 +37,7 @@ void vNetworkClientTask(void* pvParameters)
 
         unsigned long backoff = RETRY_MIN_MS;
 
-/*         for ( ; ; )
+        for ( ; ; )
         {
             SendResult result = postLap(lap);
 
@@ -54,7 +54,7 @@ void vNetworkClientTask(void* pvParameters)
 
             vTaskDelay(pdMS_TO_TICKS(backoff));
             backoff = min(backoff * 2, RETRY_MAX_MS);
-        }*/
+        }
 
         vTaskDelay(pdMS_TO_TICKS(10));
     } 

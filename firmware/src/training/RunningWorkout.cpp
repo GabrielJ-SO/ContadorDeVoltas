@@ -11,7 +11,6 @@ void rwLapCounting (Training* t) {
 
         if (t->lapsCompleted == t->dataTraining.workout.numberOfLaps) {
             t->state       = COMPLETED;
-            t->startTimeMS = millis(); // uses startTime to end training after completed time.
         } 
     } 
     else {
@@ -46,7 +45,6 @@ void rwDisplay(Training* t, char* buffer, size_t tamanhoBuffer) {
         timeFormat(t->currentTimeMS, timeBuffer, sizeof(timeBuffer));
         lapTimeFormat(t->lastLapTimeMS, lastLapTimeBuffer, sizeof(lastLapTimeBuffer));
         snprintf(buffer, tamanhoBuffer, "%s |%03d| %s |Ok!", timeBuffer, t->lapsCompleted, lastLapTimeBuffer);
-
     }
 }
 
@@ -64,6 +62,7 @@ bool startRunningWorkout(long trainingId, long athleteTag, int numberOfLaps) {
     t.state                             =     NON_STARTED;
     t.trainingId                        =      trainingId;
     t.athleteTag                        =      athleteTag;
+    t.ops                               =            rwOP;
     t.lapsCompleted                     =               0;
     t.startTimeMS                       =               0;
     t.lastLapTimeMS                     =               0;

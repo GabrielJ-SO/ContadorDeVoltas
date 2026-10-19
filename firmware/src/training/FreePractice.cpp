@@ -54,6 +54,7 @@ bool startFreePractice(long trainingId, long athleteTag) {
     t.state                              =   NON_STARTED;
     t.trainingId                         =    trainingId;
     t.athleteTag                         =    athleteTag;
+    t.ops                                =          fpOP;
     t.lapsCompleted                      =             0;
     t.startTimeMS                        =             0;
     t.lastLapTimeMS                      =             0;
