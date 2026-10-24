@@ -8,6 +8,6 @@ typedef struct FreePractice
 } FreePractice;
 
 
-bool startFreePractice(long trainingId, long athleteTag);
+bool startFreePractice(long trainingId, std::string athleteTag);
 
 #endif

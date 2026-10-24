@@ -9,7 +9,7 @@ void rwLapCounting (Training* t) {
         t->lapsTimeSumMS  += t->lastLapTimeMS;
         t->lapsCompleted++;
 
-        if (t->lapsCompleted == t->dataTraining.workout.numberOfLaps) {
+        if (t->lapsCompleted >= t->dataTraining.workout.numberOfLaps) {
             t->state       = COMPLETED;
         } 
     } 
@@ -55,7 +55,7 @@ void rwSendLapToAPI(Training* t) {
 TrainingOP rwOP = { rwLapCounting, rwDisplay, rwSendLapToAPI };
 
 
-bool startRunningWorkout(long trainingId, long athleteTag, int numberOfLaps) {
+bool startRunningWorkout(long trainingId, std::string athleteTag, int numberOfLaps) {
     Training t;
 
     t.type                              = RUNNING_WORKOUT;

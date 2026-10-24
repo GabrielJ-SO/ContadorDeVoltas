@@ -73,9 +73,13 @@ bool freePracticeRequest(AsyncWebServerRequest *request) {
     if (request->hasParam("id") && request->hasParam("tag")) 
     {
         long trainingID = request->getParam("id")->value().toInt();
-        long atheleteTag = request->getParam("tag")->value().toInt();
+        auto str = request->getParam("tag");
 
-        if (startFreePractice(trainingID, atheleteTag)) return true;
+        if (str != nullptr) {
+            std::string athleteTag(str->value().c_str());
+            if (startFreePractice(trainingID, athleteTag)) return true;
+        }
+        
     }
    
     return false;
@@ -91,10 +95,15 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request) {
     if (request->hasParam("id") && request->hasParam("tag") && request->hasParam("numLap"))
     {
         long id = request->getParam("id")->value().toInt();
-        long tag = request->getParam("tag")->value().toInt();
+        auto str = request->getParam("tag");
         int numLap = request->getParam("numLap")->value().toInt();
 
-        if (startRunningWorkout(id, tag, numLap))  return true; 
+        if (str != nullptr) {
+            std::string athleteTag(str->value().c_str());
+            Serial.println(athleteTag.c_str());
+            if (startRunningWorkout(id, athleteTag, numLap))  return true; 
+        }
+       
     }
         
     return false;

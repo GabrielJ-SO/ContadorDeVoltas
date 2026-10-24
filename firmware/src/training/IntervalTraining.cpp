@@ -83,7 +83,7 @@ void itSendLapToAPI(Training* t) {
 TrainingOP itOP = { itLapCounting, itDisplay, itSendLapToAPI };
 
 
-bool startIntervalTraining(long trainingId, long athleteTag, unsigned long restTimeMS, int intervals, int numberOfLaps) {
+bool startIntervalTraining(long trainingId, std::string athleteTag, unsigned long restTimeMS, int intervals, int numberOfLaps) {
     Training t;
 
     t.type                                    = INTERVAL_TRAINING;

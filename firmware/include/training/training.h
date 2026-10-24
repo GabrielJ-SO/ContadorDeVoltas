@@ -38,7 +38,8 @@ struct Training
     TrainingState state;
 
     int           lapsCompleted;
-    long          trainingId, athleteTag;
+    long          trainingId;
+    std::string   athleteTag;
     unsigned long startTimeMS, lastLapTimeMS, currentTimeMS, lapsTimeSumMS;
     
     union

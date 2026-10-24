@@ -47,7 +47,7 @@ void fpSendLapToAPI(Training* t) {
 TrainingOP fpOP = { fpLapCounting, fpDisplay, fpSendLapToAPI };
 
 
-bool startFreePractice(long trainingId, long athleteTag) {
+bool startFreePractice(long trainingId, std::string athleteTag) {
     Training t;
 
     t.type                               = FREE_PRACTICE;

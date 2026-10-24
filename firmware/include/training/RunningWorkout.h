@@ -7,6 +7,6 @@ typedef struct RunningWorkout
     int numberOfLaps;
 } RunningWorkout;
 
-bool startRunningWorkout(long trainingId, long atheleteTag, int numberOfLaps);
+bool startRunningWorkout(long trainingId, std::string atheleteTag, int numberOfLaps);
 
 #endif

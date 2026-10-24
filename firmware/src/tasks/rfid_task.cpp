@@ -50,8 +50,12 @@ void handleTag(const uint8_t *epc) {
     memcpy(lastEpc, epc, 12);
     lastSeen = now;
   
-    std::string tag = fmt::format("{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}", 
-                                    epc[0], epc[1], epc[2], epc[3], epc[4], epc[5], epc[6], epc[7], epc[8], epc[9], epc[10], epc[11]);
+    char hex[25];
+    for (int i = 0; i < 12; i++) sprintf(&hex[i * 2], "%02X", epc[i]);
+    hex[24] = '\0';
+    std::string tag(hex, 24);
+
+
 
     sendTagToRfidQueue(tag, 100);
 }
