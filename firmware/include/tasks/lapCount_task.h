@@ -4,6 +4,6 @@
 
 void vStartLapCountTask();
 
-bool sendTagToRfidQueue(long tag, unsigned long awaitMS);
+bool sendTagToRfidQueue(std::string tag, unsigned long awaitMS);
 
 #endif

@@ -4,4 +4,6 @@
 
 void vStartRFIDTask();
 
+void notifyRFID();
+
 #endif

@@ -4,8 +4,6 @@
 
 #include "tasks/display_task.h"
 
-//#include "training/TrainingPool.h"
-
 static TaskHandle_t xDisplayTaskHandle = NULL;
 
 void drawHeader();
@@ -17,7 +15,7 @@ void vDisplayTask(void *pvParameters)
 
     for ( ; ; )
     {
-        drawHeader(); 
+        //drawHeader(); 
         for (int i = 0; i < trainingPool.size; i++)
         {
             trainingPool.items[i].ops.display(&trainingPool.items[i], trainingBuffer, sizeof(trainingBuffer));

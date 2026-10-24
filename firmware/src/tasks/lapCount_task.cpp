@@ -8,15 +8,14 @@ static QueueHandle_t xRfidTagQueue = NULL;
 
 void vLapCountTask(void* pvParemeters)
 {
-    long tag = 0;
+    std::string tag;
 
     for ( ; ; )
     {   
 
-        //Serial.println("LAP COUNT (CORE 1)");
         if (xQueueReceive(xRfidTagQueue, &tag, portMAX_DELAY))
         {
-
+            Serial.println(tag.c_str());
         }
         
         vTaskDelay(pdMS_TO_TICKS(10));
@@ -28,7 +27,7 @@ void vStartLapCountTask() {
     xTaskCreatePinnedToCore(vLapCountTask, "LapCount_Task", 4096, NULL, 3, &xLapCountTaskHandle, 1); 
 }
 
-bool sendTagToRfidQueue(long tag, unsigned long awaitMS) {
+bool sendTagToRfidQueue(std::string tag, unsigned long awaitMS) {
     if (xRfidTagQueue == NULL) { return false; }
 
     return xQueueSend(xRfidTagQueue, &tag, pdMS_TO_TICKS(awaitMS)) == pdTRUE;

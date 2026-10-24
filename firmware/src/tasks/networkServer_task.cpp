@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "global.h"
+#include "config.h"
 
-#include "tasks/networkServer_task.h"
-#include "WiFi.h"       
+#include "tasks/networkServer_task.h"     
 #include <ESPAsyncWebServer.h>
 
 #include "training/Training.h"
@@ -12,13 +12,6 @@ static TaskHandle_t xNetworkServerTaskHandle = NULL;
 
 
 AsyncWebServer server(80);
-
-const char ssid[] = "Odisi";
-const char pass[] = "odisi1958";
-
-IPAddress local_IP(192, 168, 1, 150);
-IPAddress gateway(192, 168, 1, 1);
-IPAddress subnet(255, 255, 255, 0);
 
 void setTrainingRequests();
 
@@ -45,7 +38,6 @@ void vStartNetworkServerTask() { xTaskCreatePinnedToCore(vNetworkServerTask, "Ne
 
 void setTrainingRequests() {
 
-    // http://192.168.1.150/start/freePractice?id=trainingID&tag=atheleteTag
     server.on("/start/freePractice", HTTP_GET, [](AsyncWebServerRequest *request) {
         if (freePracticeRequest(request))
             request->send(200, "text/plain charset=utf-8;", "Treino livre iniciado!");
@@ -53,7 +45,7 @@ void setTrainingRequests() {
             request->send(500, "text/plain charset=utf-8;", "Não foi possível iniciar o treino livre.");
     });
     
-    // http://192.168.1.150/start/intervalTraining?id=trainingID&tag=atheleteTag&numInt=numberOfIntervals&numLap=numberOfLaps&restTime=restTime
+    
     server.on("/start/intervalTraining", HTTP_GET, [](AsyncWebServerRequest *request) {
         if (intervalTrainingRequest(request))
             request->send(200, "text/plain charset=utf-8;", "Treino intervalado iniciado!");
@@ -61,7 +53,7 @@ void setTrainingRequests() {
             request->send(500, "text/plain charset=utf-8;", "Não foi possível iniciar o treino intervalado.");
     });
 
-    // http://192.168.1.150/start/runningWorkout?id=trainingID&tag=atheleteTag&numLap=numberOfLaps
+   
     server.on("/start/runningWorkout", HTTP_GET, [](AsyncWebServerRequest *request) {
         if (runningWorkoutRequest(request))
             request->send(200, "text/plain charset=utf-8;", "Treino corrida iniciado!");
@@ -115,8 +107,8 @@ void initWiFi() {
     WiFi.setAutoReconnect(true);
     WiFi.persistent(false);
 
-    if (!WiFi.config(local_IP, gateway, subnet, gateway))
+    if (!WiFi.config(LOCAL_IP, GATEWAY, SUBNET, GATEWAY))
         Serial.println("Failed to configure a static IP");
 
-    WiFi.begin(ssid, pass);   
+    WiFi.begin(WIFI_SSID, WIFI_PASS);   
 }
