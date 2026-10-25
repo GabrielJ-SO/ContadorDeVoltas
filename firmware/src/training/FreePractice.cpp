@@ -9,7 +9,8 @@ void fpLapCounting (Training* t) {
         t->lapsTimeSumMS += t->lastLapTimeMS;
         t->lapsCompleted++;
 
-    } else {
+    } 
+    else {
         t->startTimeMS = millis();
         t->state       =  RUNNING;
     }

@@ -1,5 +1,5 @@
+#include "global.h"
 #include "training/Training.h"
-
 
 void timeFormat(unsigned long tempoMS, char* buffer, size_t bufferSize) {
     int seg = tempoMS / 1000 % 60;
@@ -15,9 +15,8 @@ void lapTimeFormat(unsigned long tempoMS, char* buffer, size_t bufferSize) {
 }
 
 
-void completeTraining(Training* t) {
-    t->type       = FREE_SLOT;
-    t->state      = NON_STARTED;
-    t->athleteTag = "";
-    t->trainingId = -1;
+bool completeTraining(long id) {
+    if (removeTraining(&trainingPool, id)) return true;
+
+    return false;
 }

@@ -3,10 +3,8 @@
 #include "training/TrainingPool.h"
 
 bool addTraining(Pool* p, Training t) {
-    if (p == nullptr || p->size >= MAX_TRAINING_SIMULTANEOUS) {
-        return false;
-    }
-
+    if (p == nullptr || p->size >= MAX_TRAINING_SIMULTANEOUS) return false;
+        
     p->items[p->size] = t;
     p->size++;
     return true;
@@ -22,16 +20,20 @@ void reorderPool(Pool* p) {
 
 }
 
-void removeTraining(Pool* p, int trainingId) {
-
-    for (int i = 0; i < MAX_TRAINING_SIMULTANEOUS; i++) {
+bool removeTraining(Pool* p, int trainingId) {
+    for (int i = 0; i < p->size; i++) {
         if (p->items[i].trainingId == trainingId) {
-            p->items[i].type = FREE_SLOT;
-            reorderPool(p);
+            p->items[i].type        = FREE_SLOT;
+            p->items[i].state       = COMPLETED;
+            p->items[i].athleteTag  = "";
+            p->items[i].trainingId  = -1;
+            reorderPool(p); 
             p->size--;
-            return;
+            return true;
         }
     }
+
+    return false;
 }
 
 void initializePool(Pool* p) {

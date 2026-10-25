@@ -9,9 +9,8 @@ void rwLapCounting (Training* t) {
         t->lapsTimeSumMS  += t->lastLapTimeMS;
         t->lapsCompleted++;
 
-        if (t->lapsCompleted >= t->dataTraining.workout.numberOfLaps) {
-            t->state       = COMPLETED;
-        } 
+        if (t->lapsCompleted >= t->dataTraining.workout.numberOfLaps) t->state = TrainingState::COMPLETED;
+            
     } 
     else {
         if (t->state == NON_STARTED) {
@@ -39,8 +38,6 @@ void rwDisplay(Training* t, char* buffer, size_t tamanhoBuffer) {
         }
     }
     else {
-        long timeOutMS = millis() - t->startTimeMS;
-        if (timeOutMS >= 10000){ completeTraining(t); }
 
         timeFormat(t->currentTimeMS, timeBuffer, sizeof(timeBuffer));
         lapTimeFormat(t->lastLapTimeMS, lastLapTimeBuffer, sizeof(lastLapTimeBuffer));

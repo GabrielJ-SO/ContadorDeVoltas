@@ -13,7 +13,7 @@ typedef struct Pool {
 
 
 bool addTraining(Pool* p, Training t);
-void removeTraining(Pool* p, int trainingId);
+bool removeTraining(Pool* p, int trainingId);
 
 void initializePool(Pool* p);
 

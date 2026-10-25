@@ -19,9 +19,9 @@ typedef enum {
 } TrainingType;
 
 typedef enum {
-    NON_STARTED,
-    RUNNING,
-    COMPLETED
+    NON_STARTED = 0,
+    RUNNING = 1,
+    COMPLETED = 2,
 } TrainingState;
 
 typedef struct {
@@ -55,6 +55,6 @@ struct Training
 void timeFormat(unsigned long tempoMS, char* buffer, size_t bufferSize);
 void lapTimeFormat(unsigned long tempoMS, char* buffer, size_t bufferSize);
 
-void completeTraining(Training* t);
+bool completeTraining(long id);
 
 #endif

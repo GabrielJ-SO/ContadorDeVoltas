@@ -18,10 +18,12 @@ void vLapCountTask(void* pvParemeters)
 
         if (xQueueReceive(xRfidTagQueue, &tag, portMAX_DELAY))
         {
+            std::string athleteTag;
             for (int i = 0; i < trainingPool.size; i++) {
-                std::string athleteTag = trainingPool.items[i].athleteTag;
-                
-                if (athleteTag == tag) trainingPool.items[i].ops.lapCounting(&trainingPool.items[i]);
+                athleteTag = trainingPool.items[i].athleteTag;
+                if (athleteTag == tag) {
+                    trainingPool.items[i].ops.lapCounting(&trainingPool.items[i]);
+                }  
             }
         }
         
@@ -31,7 +33,7 @@ void vLapCountTask(void* pvParemeters)
 }
 void vStartLapCountTask() {
     xRfidTagQueue = xQueueCreate(20, TAG_SIZE);
-    xTaskCreatePinnedToCore(vLapCountTask, "LapCount_Task", 4096, NULL, 3, &xLapCountTaskHandle, 1); 
+    xTaskCreatePinnedToCore(vLapCountTask, "LapCount_Task", 4096, NULL, 3, &xLapCountTaskHandle, 1);
 }
 
 bool sendTagToRfidQueue(std::string tag, unsigned long awaitMS) {

@@ -55,7 +55,7 @@ void handleTag(const uint8_t *epc) {
     hex[24] = '\0';
     std::string tag(hex, 24);
 
-
+    Serial.println(tag.c_str());
 
     sendTagToRfidQueue(tag, 100);
 }

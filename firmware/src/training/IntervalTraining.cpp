@@ -68,9 +68,6 @@ void itDisplay(Training* t, char* buffer, size_t tamanhoBuffer) {
         }
     }
     else {
-        long timeOutMS = millis() - t->startTimeMS;
-        if (timeOutMS >= 10000){ completeTraining(t); }
-   
         timeFormat(t->currentTimeMS, timeBuffer, sizeof(timeBuffer));
         snprintf(buffer, tamanhoBuffer, "%s | Concluido |%03d", timeBuffer, t->dataTraining.interval.numberOfCompletedIntervals);
     }
@@ -86,21 +83,22 @@ TrainingOP itOP = { itLapCounting, itDisplay, itSendLapToAPI };
 bool startIntervalTraining(long trainingId, std::string athleteTag, unsigned long restTimeMS, int intervals, int numberOfLaps) {
     Training t;
 
-    t.type                                    = INTERVAL_TRAINING;
-    t.state                                   =       NON_STARTED;
-    t.trainingId                              =        trainingId;
-    t.athleteTag                              =        athleteTag;
-    t.ops                                     =              itOP;
-    t.lapsCompleted                           =                 0;
-    t.startTimeMS                             =                 0;
-    t.lastLapTimeMS                           =                 0;
-    t.currentTimeMS                           =                 0;
-    t.lapsTimeSumMS                           =                 0;
-    t.dataTraining.interval.restTimeMS        =        restTimeMS;
-    t.dataTraining.interval.numberOfIntervals =         intervals;
-    t.dataTraining.interval.numberOfLaps      =      numberOfLaps;
-    t.dataTraining.interval.interval          =             false;
-    t.dataTraining.interval.intervalCompleted =             false;
+    t.type                                             = INTERVAL_TRAINING;
+    t.state                                            =       NON_STARTED;
+    t.trainingId                                       =        trainingId;
+    t.athleteTag                                       =        athleteTag;
+    t.ops                                              =              itOP;
+    t.lapsCompleted                                    =                 0;
+    t.startTimeMS                                      =                 0;
+    t.lastLapTimeMS                                    =                 0;
+    t.currentTimeMS                                    =                 0;
+    t.lapsTimeSumMS                                    =                 0;
+    t.dataTraining.interval.numberOfCompletedIntervals =                 0;
+    t.dataTraining.interval.restTimeMS                 =        restTimeMS;
+    t.dataTraining.interval.numberOfIntervals          =         intervals;
+    t.dataTraining.interval.numberOfLaps               =      numberOfLaps;
+    t.dataTraining.interval.interval                   =             false;
+    t.dataTraining.interval.intervalCompleted          =             false;
 
     if (addTraining(&trainingPool, t)) 
         return true;

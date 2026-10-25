@@ -18,6 +18,7 @@ void setTrainingRequests();
 bool freePracticeRequest(AsyncWebServerRequest *request);
 bool intervalTrainingRequest(AsyncWebServerRequest *request);
 bool runningWorkoutRequest(AsyncWebServerRequest *request);
+bool stopTrainingRequest(AsyncWebServerRequest *request);
 
 void vNetworkServerTask(void* pvParameters) 
 {
@@ -27,9 +28,6 @@ void vNetworkServerTask(void* pvParameters)
 
     for ( ; ; )
     {   
-        //Serial.println("SERVER (CORE 0)");
-
-        //Serial.printf("Wifi Status: %d\n", WiFi.status());
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
@@ -62,6 +60,15 @@ void setTrainingRequests() {
     });
 
 
+    server.on("/stop/training", HTTP_GET, [](AsyncWebServerRequest *request) {
+        if (stopTrainingRequest(request))
+            request->send(200, "text/plain charset=utf-8;", "Treino Finalizado!");
+        else
+            request->send(500, "text/plain charset=utf-8;", "Não foi possível finalizar o treino.");
+
+    });
+
+
     server.onNotFound([](AsyncWebServerRequest *request) {
         request->send(404, "text/plain; charset=utf-8;", "Rota não encontrada");
     });
@@ -69,11 +76,10 @@ void setTrainingRequests() {
 
 
 bool freePracticeRequest(AsyncWebServerRequest *request) {
-
     if (request->hasParam("id") && request->hasParam("tag")) 
     {
         long trainingID = request->getParam("id")->value().toInt();
-        auto str = request->getParam("tag");
+        auto str        = request->getParam("tag");
 
         if (str != nullptr) {
             std::string athleteTag(str->value().c_str());
@@ -87,20 +93,36 @@ bool freePracticeRequest(AsyncWebServerRequest *request) {
 
 
 bool intervalTrainingRequest(AsyncWebServerRequest *request) {
-    // TODO
+    if (request->hasParam("id") && request->hasParam("tag") && request->hasParam("numInt") && request->hasParam("numLap") && request->hasParam("restTime")) 
+    {
+        long trainingID        = request->getParam("id")->value().toInt();
+        auto str               = request->getParam("tag");
+        int numberOfIntervals  = request->getParam("numInt")->value().toInt();
+        int numLap             = request->getParam("numLap")->value().toInt();
+        unsigned long restTime = request->getParam("restTime")->value().toInt();
+
+        if (str != nullptr) {
+            std::string athleteTag(str->value().c_str());
+            if (startIntervalTraining(trainingID, athleteTag, restTime, numberOfIntervals, numLap)) return true;
+        }
+        
+    }
+
     return false;
 }
 
 bool runningWorkoutRequest(AsyncWebServerRequest *request) {
     if (request->hasParam("id") && request->hasParam("tag") && request->hasParam("numLap"))
     {
-        long id = request->getParam("id")->value().toInt();
-        auto str = request->getParam("tag");
+        long id    = request->getParam("id")->value().toInt();
+        auto str   = request->getParam("tag");
         int numLap = request->getParam("numLap")->value().toInt();
+        
+        Serial.printf("id: %d  |  ", id);
+        Serial.printf("lap number: %d\n", numLap);
 
         if (str != nullptr) {
             std::string athleteTag(str->value().c_str());
-            Serial.println(athleteTag.c_str());
             if (startRunningWorkout(id, athleteTag, numLap))  return true; 
         }
        
@@ -108,6 +130,18 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request) {
         
     return false;
 }
+
+
+bool stopTrainingRequest(AsyncWebServerRequest *request) {
+    if (request->hasParam("id")) 
+    {   
+        long id = request->getParam("id")->value().toInt();
+        if (completeTraining(id)) return true;
+    }
+    
+    return false;
+}
+
 
 void initWiFi() {
 
