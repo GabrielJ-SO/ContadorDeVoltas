@@ -6,6 +6,7 @@
 #include "tasks/lapCount_task.h"
 #include "tasks/networkClient_task.h"
 #include "tasks/networkServer_task.h"
+#include "tasks/trainingChecker_task.h"
 
 #include "training/TrainingPool.h"
 
@@ -29,6 +30,7 @@ void setup() {
     vStartDisplayTask();
     vStartLapCountTask();
     vStartNetworkClientTask();
+    vStartTrainingCheckerTask();
 
     Serial.println("Running...");
 

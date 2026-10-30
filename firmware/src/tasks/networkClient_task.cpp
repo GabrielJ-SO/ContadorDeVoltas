@@ -4,7 +4,8 @@
 #include "HTTPClient.h"
 #include "global.h"
 
-static const char*         API_URL       = "";
+#include "config.h"
+
 static const unsigned long HTTP_TIMEOUT  = 3000;
 static const unsigned long RETRY_MIN_MS  = 500;
 static const unsigned long RETRY_MAX_MS  = 10000;

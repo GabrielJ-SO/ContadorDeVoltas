@@ -118,8 +118,6 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request) {
         auto str   = request->getParam("tag");
         int numLap = request->getParam("numLap")->value().toInt();
         
-        Serial.printf("id: %d  |  ", id);
-        Serial.printf("lap number: %d\n", numLap);
 
         if (str != nullptr) {
             std::string athleteTag(str->value().c_str());

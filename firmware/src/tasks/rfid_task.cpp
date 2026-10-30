@@ -2,7 +2,6 @@
 
 #include "tasks/rfid_task.h"
 #include "tasks/lapCount_task.h"
-#include "FmtLib.h"
 
 static TaskHandle_t xRFIDTaskHandle = NULL;
 static uint8_t lastEpc[12];
