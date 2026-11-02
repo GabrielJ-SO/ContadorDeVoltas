@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "tasks/rfid_task.h"
 
 #include "training/TrainingPool.h"
 
@@ -6,6 +7,7 @@ bool addTraining(Pool* p, Training t) {
     if (p == nullptr || p->size >= MAX_TRAINING_SIMULTANEOUS) return false;
         
     p->items[p->size] = t;
+    addTag(t.athleteTag);
     p->size++;
     return true;
 }
@@ -23,6 +25,7 @@ void reorderPool(Pool* p) {
 bool removeTraining(Pool* p, int trainingId) {
     for (int i = 0; i < p->size; i++) {
         if (p->items[i].trainingId == trainingId) {
+            removeTag(p->items[i].athleteTag);
             p->items[i].type        = FREE_SLOT;
             p->items[i].state       = COMPLETED;
             p->items[i].athleteTag  = "";

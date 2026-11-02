@@ -6,4 +6,7 @@ void vStartRFIDTask();
 
 void notifyRFID();
 
+void addTag(std::string tag);
+void removeTag(std::string tag);
+
 #endif

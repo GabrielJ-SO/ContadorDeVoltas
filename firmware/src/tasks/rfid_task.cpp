@@ -3,17 +3,29 @@
 #include "tasks/rfid_task.h"
 #include "tasks/lapCount_task.h"
 
+#define NUM_TAGS 4
+
 static TaskHandle_t xRFIDTaskHandle = NULL;
 static uint8_t lastEpc[12];
-static uint32_t lastSeen = 0;
-const uint32_t DEBOUNCE_MS = 1000;
+const uint32_t DEBOUNCE_MS = 15000;
 
 void handleTag(const uint8_t *epc);
+
+typedef struct Tag {
+    std::string id;
+    uint32_t lastSeen;
+} Tag;
+
+static Tag tagList[NUM_TAGS];
+
+void initializeTagList();
 
 void vRFIDTask(void *pvParemeters)
 {
     static uint8_t buf[64];
-    static size_t idx = 0;
+    static size_t  idx = 0;
+
+    initializeTagList();
 
     for ( ; ; )
     {
@@ -40,23 +52,59 @@ void vRFIDTask(void *pvParemeters)
 
 void vStartRFIDTask() { xTaskCreatePinnedToCore(vRFIDTask, "RFID_TASK", 4096, NULL, 5, &xRFIDTaskHandle, 0); }
 
-void handleTag(const uint8_t *epc) {
+
+bool checkTag(std::string tag) {
     uint32_t now = millis();
-    if (memcmp(epc, lastEpc, 12) == 0 && (now - lastSeen) < DEBOUNCE_MS) {
-        lastSeen = now;  
-        return;
+
+    for (int i = 0; i < NUM_TAGS; i++) {
+        if ((tagList[i].id == tag) && (now - tagList[i].lastSeen) > DEBOUNCE_MS)
+        {   
+            tagList[i].lastSeen = now;
+            return true;
+        }
     }
-    memcpy(lastEpc, epc, 12);
-    lastSeen = now;
-  
+
+    return false;
+}
+
+void handleTag(const uint8_t *epc) {
+
     char hex[25];
     for (int i = 0; i < 12; i++) sprintf(&hex[i * 2], "%02X", epc[i]);
     hex[24] = '\0';
     std::string tag(hex, 24);
 
-    Serial.println(tag.c_str());
+    if (checkTag(tag)) sendTagToRfidQueue(tag, 100);
 
-    sendTagToRfidQueue(tag, 100);
+    Serial.println(tag.c_str());
+}
+
+void initializeTagList() {
+    for (int i = 0; i < NUM_TAGS; i++) {
+        tagList[i].id       = "";
+        tagList[i].lastSeen =  0;
+    }
+}
+
+void addTag(std::string tag) {
+    for (int i = 0; i < NUM_TAGS; i++) {
+        if (tagList[i].id == "") {
+            tagList[i].id = tag;
+            return;
+        }
+            
+    }
+}
+
+void removeTag(std::string tag) {
+    for (int i = 0; i < NUM_TAGS; i++) {
+        if (tagList[i].id == tag) {
+            tagList[i].id       = "";
+            tagList[i].lastSeen =  0;
+            return;
+        }
+            
+    }
 }
 
 void notifyRFID() {
