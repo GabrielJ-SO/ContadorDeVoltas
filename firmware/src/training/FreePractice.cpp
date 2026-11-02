@@ -5,7 +5,7 @@
 void fpLapCounting (Training* t) {
     if (t->state == RUNNING)
     {
-        t->lastLapTimeMS = t->currentTimeMS - t->lapsTimeSumMS;
+        t->lastLapTimeMS  = t->currentTimeMS - t->lapsTimeSumMS;
         t->lapsTimeSumMS += t->lastLapTimeMS;
         t->lapsCompleted++;
 
