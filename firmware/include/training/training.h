@@ -27,7 +27,6 @@ typedef enum {
 typedef struct {
     void  (*lapCounting)(Training* t);
     void  (*display)(Training* t, char* buffer, size_t tamanhoBuffer);
-    void  (*sendLapToAPI)(Training* t);
 } TrainingOP;
 
 

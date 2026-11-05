@@ -41,11 +41,8 @@ char timeBuffer[16], lastLapTimeBuffer[12];
     }
 }
 
-void fpSendLapToAPI(Training* t) {
 
-}
-
-TrainingOP fpOP = { fpLapCounting, fpDisplay, fpSendLapToAPI };
+TrainingOP fpOP = { fpLapCounting, fpDisplay };
 
 
 bool startFreePractice(long trainingId, std::string athleteTag) {

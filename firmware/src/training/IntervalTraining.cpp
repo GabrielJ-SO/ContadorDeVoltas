@@ -73,11 +73,8 @@ void itDisplay(Training* t, char* buffer, size_t tamanhoBuffer) {
     }
 }
 
-void itSendLapToAPI(Training* t) {
 
-}
-
-TrainingOP itOP = { itLapCounting, itDisplay, itSendLapToAPI };
+TrainingOP itOP = { itLapCounting, itDisplay };
 
 
 bool startIntervalTraining(long trainingId, std::string athleteTag, unsigned long restTimeMS, int intervals, int numberOfLaps) {

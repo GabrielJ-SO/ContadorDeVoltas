@@ -2,6 +2,7 @@
 #include "global.h"
 
 #include "tasks/lapCount_task.h"
+#include "tasks/networkClient_task.h"
 
 #define TAG_SIZE 25
 
@@ -21,8 +22,15 @@ void vLapCountTask(void* pvParemeters)
             std::string athleteTag;
             for (int i = 0; i < trainingPool.size; i++) {
                 athleteTag = trainingPool.items[i].athleteTag;
-                if (athleteTag == tag) {
+                if (athleteTag == tag)
+                {
                     trainingPool.items[i].ops.lapCounting(&trainingPool.items[i]);
+
+                    if (trainingPool.items[i].lapsCompleted > 0) {
+                        Lap lap = createLap(trainingPool.items[i].trainingId, trainingPool.items[i].lastLapTimeMS);
+                        sendLapToQueue(lap, pdMS_TO_TICKS(100));
+                    }
+
                 }  
             }
         }

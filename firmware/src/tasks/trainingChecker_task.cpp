@@ -10,7 +10,6 @@ bool canComplete(Training *t);
 
 void vTrainingCheckerTask(void *pvParameters)
 {
-    Serial.println("TRAINING_CHEKER TASK");
     for ( ; ; )
     {
         for (int i = 0; i < trainingPool.size; i++) {
@@ -18,7 +17,7 @@ void vTrainingCheckerTask(void *pvParameters)
                 completeTraining(trainingPool.items[i].trainingId);
         }
     
-        vTaskDelay(pdMS_TO_TICKS(15000));
+        vTaskDelay(pdMS_TO_TICKS(45000));
     }
 }
 

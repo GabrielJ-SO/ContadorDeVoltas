@@ -118,7 +118,7 @@ bool runningWorkoutRequest(AsyncWebServerRequest *request) {
         auto str   = request->getParam("tag");
         int numLap = request->getParam("numLap")->value().toInt();
         
-
+        Serial.println(id);
         if (str != nullptr) {
             std::string athleteTag(str->value().c_str());
             if (startRunningWorkout(id, athleteTag, numLap))  return true; 

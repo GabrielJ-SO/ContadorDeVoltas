@@ -45,11 +45,8 @@ void rwDisplay(Training* t, char* buffer, size_t tamanhoBuffer) {
     }
 }
 
-void rwSendLapToAPI(Training* t) {
 
-}
-
-TrainingOP rwOP = { rwLapCounting, rwDisplay, rwSendLapToAPI };
+TrainingOP rwOP = { rwLapCounting, rwDisplay };
 
 
 bool startRunningWorkout(long trainingId, std::string athleteTag, int numberOfLaps) {
