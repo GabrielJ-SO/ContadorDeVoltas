@@ -4,7 +4,7 @@
 #include "tasks/lapCount_task.h"
 #include "tasks/networkClient_task.h"
 
-#define TAG_SIZE 25
+#define TAG_SIZE 24
 
 static TaskHandle_t xLapCountTaskHandle = NULL;
 
@@ -19,10 +19,9 @@ void vLapCountTask(void* pvParemeters)
 
         if (xQueueReceive(xRfidTagQueue, &tag, portMAX_DELAY))
         {
-            std::string athleteTag;
             for (int i = 0; i < trainingPool.size; i++) {
-                athleteTag = trainingPool.items[i].athleteTag;
-                if (athleteTag == tag)
+
+                if (trainingPool.items[i].athleteTag == tag)
                 {
                     trainingPool.items[i].ops.lapCounting(&trainingPool.items[i]);
 
@@ -31,7 +30,7 @@ void vLapCountTask(void* pvParemeters)
                         sendLapToQueue(lap, pdMS_TO_TICKS(100));
                     }
 
-                }  
+                } 
             }
         }
         
