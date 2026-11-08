@@ -1,5 +1,6 @@
 package com.gabrielodisi.contadorvoltas.controller;
 
+import com.gabrielodisi.contadorvoltas.dto.LoginAtletaDTO;
 import com.gabrielodisi.contadorvoltas.model.Atleta;
 import com.gabrielodisi.contadorvoltas.model.treinos.Treino;
 import com.gabrielodisi.contadorvoltas.service.AtletaService;
@@ -38,9 +39,9 @@ public class AtletaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/login/{nome}/{senha}")
-    public ResponseEntity<Atleta> login(@PathVariable String nome, @PathVariable String senha) {
-        Optional<Atleta> atleta = service.login(nome, senha);
+    @PostMapping("/login")
+    public ResponseEntity<Atleta> login(@RequestBody LoginAtletaDTO login) {
+        Optional<Atleta> atleta = service.login(login.getNome(), login.getSenha());
         return atleta.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

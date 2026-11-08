@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RegistroVoltaDTO {
-    long treino_id;
-    long tempoVolta;
+    private long treino_id;
+    private long tempoVolta;
 }
