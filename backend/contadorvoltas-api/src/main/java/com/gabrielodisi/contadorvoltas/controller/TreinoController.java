@@ -1,5 +1,6 @@
 package com.gabrielodisi.contadorvoltas.controller;
 
+import com.gabrielodisi.contadorvoltas.dto.RegistroVoltaDTO;
 import com.gabrielodisi.contadorvoltas.model.treinos.Treino;
 import com.gabrielodisi.contadorvoltas.model.treinos.Volta;
 import com.gabrielodisi.contadorvoltas.service.TreinoService;
@@ -30,9 +31,9 @@ public class TreinoController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/registrar_volta/{id}")
-    public ResponseEntity<Void> registrarVolta(@PathVariable Long id, @RequestBody Volta volta) {
-        service.registrarVolta(id, (volta.getTempo()));
+    @PostMapping("/registrar_volta")
+    public ResponseEntity<Void> registrarVolta(@RequestBody RegistroVoltaDTO dto) {
+        service.registrarVolta(dto.getTreino_id(), dto.getTempoVolta());
         return ResponseEntity.ok().build();
     }
 

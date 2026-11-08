@@ -15,6 +15,7 @@ public class Atleta extends Pessoa {
 
     @Setter
     @Size(min = 24, max = 24)
+    @Column(unique = true)
     private String tagRFID;
 
     @OneToMany(mappedBy = "atleta", orphanRemoval = true, fetch = FetchType.EAGER)
