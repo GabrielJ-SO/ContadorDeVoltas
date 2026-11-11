@@ -1,0 +1,102 @@
+#include "pch.h"
+
+#include "tasks/networkClient_task.h"
+#include "HTTPClient.h"
+#include "global.h"
+
+#include "config.h"
+
+static const unsigned long HTTP_TIMEOUT  = 3000;
+static const unsigned long RETRY_MIN_MS  = 500;
+static const unsigned long RETRY_MAX_MS  = 10000;
+
+enum class SendResult {
+    OK,
+    RETRY,
+    DROP
+};
+
+static TaskHandle_t xNetworkClientTaskHandle = NULL;
+QueueHandle_t xLapQueue = NULL;
+
+SendResult postLap(Lap &lap);
+
+void vNetworkClientTask(void* pvParameters) 
+{
+    Lap lap;
+
+    for ( ; ; )
+    {   
+        xQueueReceive(xLapQueue, &lap, portMAX_DELAY);
+
+        unsigned long backoff = RETRY_MIN_MS;
+
+        for ( ; ; )
+        {
+            SendResult result = postLap(lap);
+
+            if (result == SendResult::OK)
+                break;
+
+            if (result == SendResult::DROP) {
+                Serial.printf("Volta descartada (training %ld)\n", lap.trainingID);
+                break;
+            }
+
+            if (backoff >= RETRY_MAX_MS)
+                break;
+
+            vTaskDelay(pdMS_TO_TICKS(backoff));
+            backoff = min(backoff * 2, RETRY_MAX_MS);
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(10));
+    } 
+
+}
+void vStartNetworkClientTask() {
+    xLapQueue = xQueueCreate(100, sizeof(Lap));
+    xTaskCreatePinnedToCore(vNetworkClientTask, "NetClient_Task", 8192, NULL, 3, &xNetworkClientTaskHandle, 0);
+}
+
+
+bool sendLapToQueue(Lap lap, unsigned long awaitMS) {
+    if (xLapQueue == NULL) { return false; }
+
+    return xQueueSend(xLapQueue, &lap, pdMS_TO_TICKS(awaitMS)) == pdTRUE;
+}
+
+
+Lap createLap(long trainingID, unsigned long lapTime) {
+    Lap lap = { trainingID, lapTime };
+    return lap;
+}
+
+SendResult postLap(Lap &lap) {
+    Serial.println(" Volta Recebida");
+
+    if (WiFi.status() != WL_CONNECTED)
+        return SendResult::RETRY;
+
+    char body[96];
+    snprintf(body, sizeof(body),
+             "{\"treino_id\":%ld,\"tempoVolta\":%lu}",
+             lap.trainingID, lap.lapTime);
+
+    WiFiClient client;
+    HTTPClient http;
+    
+    http.setReuse(false);
+    http.setTimeout(HTTP_TIMEOUT);
+
+    if (!http.begin(client, API_URL))
+        return SendResult::RETRY;
+
+    http.addHeader("Content-Type", "application/json");
+    int code = http.POST(body);
+    http.end();
+
+    if (code >= 200 && code < 300) return SendResult::OK;
+    if (code >= 400 && code < 500) return SendResult::DROP;
+    return SendResult::RETRY;                                  
+}

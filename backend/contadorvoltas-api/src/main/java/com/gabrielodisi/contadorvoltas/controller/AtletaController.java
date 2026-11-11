@@ -1,13 +1,15 @@
 package com.gabrielodisi.contadorvoltas.controller;
 
+import com.gabrielodisi.contadorvoltas.dto.LoginAtletaDTO;
 import com.gabrielodisi.contadorvoltas.model.Atleta;
-import com.gabrielodisi.contadorvoltas.model.Treino;
+import com.gabrielodisi.contadorvoltas.model.treinos.Treino;
 import com.gabrielodisi.contadorvoltas.service.AtletaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +22,13 @@ public class AtletaController {
     @PostMapping
     public Atleta salvar(@RequestBody Atleta atleta){ return service.salvar(atleta); }
 
+    @PatchMapping("/tag/update/{id}")
+    public ResponseEntity<Atleta> atualizarTag(@PathVariable("id") long id, @RequestBody Map<String, String> payload) {
+        Atleta atleta = service.atualizarTag(id, payload.get("tag"));
+        return ResponseEntity.ok(atleta);
+    }
+
+
     @DeleteMapping("/{id}")
     public void deletarAtleta(@PathVariable Long id){ service.deletar(id); }
 
@@ -30,9 +39,9 @@ public class AtletaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/login/{nome}/{senha}")
-    public ResponseEntity<Atleta> login(@PathVariable String nome, @PathVariable String senha) {
-        Optional<Atleta> atleta = service.login(nome, senha);
+    @PostMapping("/login")
+    public ResponseEntity<Atleta> login(@RequestBody LoginAtletaDTO login) {
+        Optional<Atleta> atleta = service.login(login.getNome(), login.getSenha());
         return atleta.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -40,6 +49,13 @@ public class AtletaController {
     @GetMapping("/{id}/treinos")
     public ResponseEntity<List<Treino>> listarTreinos(@PathVariable Long id){
         Optional<List<Treino>> treinos = Optional.ofNullable(service.listarTreinos(id));
+        return treinos.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/treinos/{inicio}/{fim}")
+    public ResponseEntity<List<Treino>> listarTreinosComLimite(@PathVariable Long id, @PathVariable Integer inicio, @PathVariable Integer fim){
+        Optional<List<Treino>> treinos = Optional.ofNullable(service.listarTreinosComLimite(id, inicio, fim));
         return treinos.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
